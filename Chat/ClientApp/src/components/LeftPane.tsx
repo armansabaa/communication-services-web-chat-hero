@@ -4,7 +4,7 @@ import { DefaultButton, Icon, IconButton, Pivot, PivotItem, Stack, StackItem } f
 import { leftPaneStyle, paneButtonStyle } from './styles/ChatScreen.styles';
 
 export interface LeftPaneProps {
-  onTabClicked(): void;
+  onTabClicked(tab: string): void;
 }
 
 export default (props: LeftPaneProps): JSX.Element => {
@@ -18,6 +18,7 @@ export default (props: LeftPaneProps): JSX.Element => {
             <DefaultButton
               id="Home"
               className={paneButtonStyle}
+              onClick={() => onTabClicked('welcome')}
             >
               <Icon iconName="Home" />
             </DefaultButton>
@@ -38,7 +39,7 @@ export default (props: LeftPaneProps): JSX.Element => {
             <DefaultButton 
               id="Group" 
               className={paneButtonStyle}
-              onClick={() => onTabClicked()}
+              onClick={() => onTabClicked('attendees')}
             >
               <Icon iconName="Group" />
             </DefaultButton>
