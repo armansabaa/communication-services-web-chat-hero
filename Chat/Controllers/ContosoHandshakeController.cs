@@ -193,5 +193,43 @@ namespace Chat
 			_store.Store.Add(threadId, moderatorId);
 			return threadId;
 		}
+
+		/// <summary>
+		/// Create a new room
+		/// </summary>
+		/// <returns>200 if successful and returns roomId</returns>
+		[Route("createRoom")]
+		[HttpPost]
+		public async Task<string> CreateRoom()
+		{
+				// Our API would generate a new room and return the Id
+				return "room_id";
+		}
+
+		/// <summary>
+		/// Create a thread associated with the room
+		/// <param name="roomId"></param>
+		/// </summary>
+		/// <returns>200 if successful and returns threadId</returns>
+		[Route("createRoomThread/{roomId}")]
+		[HttpPost]
+		public async Task<string> CreateRoomThread(string roomId)
+		{
+				// Our API would generate a new thread id and associate it with the room
+				return "thread_id";
+		}
+
+		/// <summary>
+		/// Create a thread associated with the room
+		/// <param name="roomId"></param>
+		/// </summary>
+		/// <returns>200 if successful</returns>
+		[Route("addUserToRoom/{roomId}")]
+		[HttpPost]
+		public async void AddUserToRoom(string roomId)
+		{
+				// Our API would retrieve the associated thread of the room and add user as chat participant
+				return;
+		}
 	}
 }
