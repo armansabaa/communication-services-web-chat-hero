@@ -91,57 +91,57 @@ namespace Chat.Services.LiveStreaming
 					)
 			};
 			LiveEvent liveEvent = new LiveEvent(
-					location: mediaService.Location,
-					description: "Sample LiveEvent from .NET SDK sample",
-					// Set useStaticHostname to true to make the ingest and preview URL host name the same. 
-					// This can slow things down a bit. 
-					useStaticHostname: true,
+				location: mediaService.Location,
+				description: "Sample LiveEvent from .NET SDK sample",
+				// Set useStaticHostname to true to make the ingest and preview URL host name the same. 
+				// This can slow things down a bit. 
+				useStaticHostname: true,
 
-					// 1) Set up the input settings for the Live event...
-					input: new LiveEventInput(
-						streamingProtocol: LiveEventInputProtocol.RTMP,  // options are RTMP or Smooth Streaming ingest format.
-																		 // This sets a static access token for use on the ingest path. 
-																		 // Combining this with useStaticHostname:true will give you the same ingest URL on every creation.
-																		 // This is helpful when you only want to enter the URL into a single encoder one time for this Live Event name
-						accessToken: "acf7b6ef-8a37-425f-b8fc-51c2d6a5a86a",  // Use this value when you want to make sure the ingest URL is static and always the same. If omitted, the service will generate a random GUID value.
-						accessControl: liveEventInputAccess, // controls the IP restriction for the source encoder.
-						keyFrameIntervalDuration: "PT2S" // Set this to match the ingest encoder's settings
-					),
-					// 2) Set the live event to use pass-through or cloud encoding modes...
-					encoding: new LiveEventEncoding(
-						// Set this to Standard or Premium1080P to use the cloud live encoder.
-						// See https://go.microsoft.com/fwlink/?linkid=2095101 for more information
-						// Otherwise, leave as "None" to use pass-through mode
-						encodingType: LiveEventEncodingType.None // also known as pass-through mode.
-																 // OPTIONAL settings when using live cloud encoding type:
-																 // keyFrameInterval: "PT2S", //If this value is not set for an encoding live event, the fragment duration defaults to 2 seconds. The value cannot be set for pass-through live events.
-																 // presetName: null, // only used for custom defined presets. 
-																 //stretchMode: "None" // can be used to determine stretch on encoder mode
-					),
-					// 3) Set up the Preview endpoint for monitoring based on the settings above we already set.
-					preview: liveEventPreview,
-					// 4) Set up more advanced options on the live event. Low Latency is the most common one.
-					streamOptions: new List<StreamOptionsFlag?>()
-					{
-						// Set this to Default or Low Latency
-						// When using Low Latency mode, you must configure the Azure Media Player to use the 
-						// quick start heuristic profile or you won't notice the change. 
-						// In the AMP player client side JS options, set -  heuristicProfile: "Low Latency Heuristic Profile". 
-						// To use low latency optimally, you should tune your encoder settings down to 1 second GOP size instead of 2 seconds.
-						StreamOptionsFlag.LowLatency
-					}
-			//,
-			// 5) Optionally enable live transcriptions if desired. 
-			// WARNING : This is extra cost ($$$), so please check pricing before enabling.
-			/*transcriptions:new List<LiveEventTranscription>(){
-				new LiveEventTranscription(
-					// The value should be in BCP-47 format (e.g: 'en-US'). See https://go.microsoft.com/fwlink/?linkid=2133742
-					language: "en-us",
-					outputTranscriptionTrack : new LiveEventOutputTranscriptionTrack(
-						trackName: "English" // set the name you want to appear in the output manifest
+				// 1) Set up the input settings for the Live event...
+				input: new LiveEventInput(
+					streamingProtocol: LiveEventInputProtocol.RTMP,  // options are RTMP or Smooth Streaming ingest format.
+																		// This sets a static access token for use on the ingest path. 
+																		// Combining this with useStaticHostname:true will give you the same ingest URL on every creation.
+																		// This is helpful when you only want to enter the URL into a single encoder one time for this Live Event name
+					accessToken: "acf7b6ef-8a37-425f-b8fc-51c2d6a5a86a",  // Use this value when you want to make sure the ingest URL is static and always the same. If omitted, the service will generate a random GUID value.
+					accessControl: liveEventInputAccess, // controls the IP restriction for the source encoder.
+					keyFrameIntervalDuration: "PT2S" // Set this to match the ingest encoder's settings
+				),
+				// 2) Set the live event to use pass-through or cloud encoding modes...
+				encoding: new LiveEventEncoding(
+					// Set this to Standard or Premium1080P to use the cloud live encoder.
+					// See https://go.microsoft.com/fwlink/?linkid=2095101 for more information
+					// Otherwise, leave as "None" to use pass-through mode
+					encodingType: LiveEventEncodingType.None // also known as pass-through mode.
+																// OPTIONAL settings when using live cloud encoding type:
+																// keyFrameInterval: "PT2S", //If this value is not set for an encoding live event, the fragment duration defaults to 2 seconds. The value cannot be set for pass-through live events.
+																// presetName: null, // only used for custom defined presets. 
+																//stretchMode: "None" // can be used to determine stretch on encoder mode
+				),
+				// 3) Set up the Preview endpoint for monitoring based on the settings above we already set.
+				preview: liveEventPreview,
+				// 4) Set up more advanced options on the live event. Low Latency is the most common one.
+				streamOptions: new List<StreamOptionsFlag?>()
+				{
+					// Set this to Default or Low Latency
+					// When using Low Latency mode, you must configure the Azure Media Player to use the 
+					// quick start heuristic profile or you won't notice the change. 
+					// In the AMP player client side JS options, set -  heuristicProfile: "Low Latency Heuristic Profile". 
+					// To use low latency optimally, you should tune your encoder settings down to 1 second GOP size instead of 2 seconds.
+					StreamOptionsFlag.LowLatency
+				}
+				//,
+				// 5) Optionally enable live transcriptions if desired. 
+				// WARNING : This is extra cost ($$$), so please check pricing before enabling.
+				/*transcriptions:new List<LiveEventTranscription>(){
+					new LiveEventTranscription(
+						// The value should be in BCP-47 format (e.g: 'en-US'). See https://go.microsoft.com/fwlink/?linkid=2133742
+						language: "en-us",
+						outputTranscriptionTrack : new LiveEventOutputTranscriptionTrack(
+							trackName: "English" // set the name you want to appear in the output manifest
+						)
 					)
-				)
-			}*/
+				}*/
 			);
 
 			try
@@ -450,21 +450,21 @@ namespace Chat.Services.LiveStreaming
 						case "Microsoft.Media.JobFinished":
 						case "Microsoft.Media.JobCanceled":
 						case "Microsoft.Media.JobErrored":
+						{
+							MediaJobStateChangeEventData jobEventData = jObj.GetValue("data").ToObject<MediaJobStateChangeEventData>();
+
+							Console.WriteLine($"Job state changed for JobId: {eventName} PreviousState: {jobEventData.PreviousState} State: {jobEventData.State}");
+
+							// For final states, send a message to notify that the job has finished.
+							if (eventType == "Microsoft.Media.JobFinished" || eventType == "Microsoft.Media.JobCanceled" || eventType == "Microsoft.Media.JobErrored")
 							{
-								MediaJobStateChangeEventData jobEventData = jObj.GetValue("data").ToObject<MediaJobStateChangeEventData>();
-
-								Console.WriteLine($"Job state changed for JobId: {eventName} PreviousState: {jobEventData.PreviousState} State: {jobEventData.State}");
-
-								// For final states, send a message to notify that the job has finished.
-								if (eventType == "Microsoft.Media.JobFinished" || eventType == "Microsoft.Media.JobCanceled" || eventType == "Microsoft.Media.JobErrored")
+								// Job finished, send a message.
+								if (jobWaitingEvent != null)
 								{
-									// Job finished, send a message.
-									if (jobWaitingEvent != null)
-									{
-										jobWaitingEvent.Set();
-									}
+									jobWaitingEvent.Set();
 								}
 							}
+						}
 							break;
 
 						// Job output state change events
@@ -475,84 +475,84 @@ namespace Chat.Services.LiveStreaming
 						case "Microsoft.Media.JobOutputFinished":
 						case "Microsoft.Media.JobOutputCanceled":
 						case "Microsoft.Media.JobOutputErrored":
-							{
-								MediaJobOutputStateChangeEventData jobEventData = jObj.GetValue("data").ToObject<MediaJobOutputStateChangeEventData>();
+						{
+							MediaJobOutputStateChangeEventData jobEventData = jObj.GetValue("data").ToObject<MediaJobOutputStateChangeEventData>();
 
-								Console.WriteLine($"Job output state changed for JobId: {eventName} PreviousState: {jobEventData.PreviousState} " +
-									$"State: {jobEventData.Output.State} Progress: {jobEventData.Output.Progress}%");
-							}
+							Console.WriteLine($"Job output state changed for JobId: {eventName} PreviousState: {jobEventData.PreviousState} " +
+								$"State: {jobEventData.Output.State} Progress: {jobEventData.Output.Progress}%");
+						}
 							break;
 
 						// Job output progress event
 						case "Microsoft.Media.JobOutputProgress":
-							{
-								MediaJobOutputProgressEventData jobEventData = jObj.GetValue("data").ToObject<MediaJobOutputProgressEventData>();
+						{
+							MediaJobOutputProgressEventData jobEventData = jObj.GetValue("data").ToObject<MediaJobOutputProgressEventData>();
 
-								Console.WriteLine($"Job output progress changed for JobId: {eventName} Progress: {jobEventData.Progress}%");
-							}
+							Console.WriteLine($"Job output progress changed for JobId: {eventName} Progress: {jobEventData.Progress}%");
+						}
 							break;
 
 						// LiveEvent Stream-level events
 						case "Microsoft.Media.LiveEventConnectionRejected":
-							{
-								MediaLiveEventConnectionRejectedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventConnectionRejectedEventData>();
-								Console.WriteLine($"LiveEvent connection rejected. IngestUrl: {liveEventData.IngestUrl} StreamId: {liveEventData.StreamId} " +
-									$"EncoderIp: {liveEventData.EncoderIp} EncoderPort: {liveEventData.EncoderPort}");
-							}
+						{
+							MediaLiveEventConnectionRejectedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventConnectionRejectedEventData>();
+							Console.WriteLine($"LiveEvent connection rejected. IngestUrl: {liveEventData.IngestUrl} StreamId: {liveEventData.StreamId} " +
+								$"EncoderIp: {liveEventData.EncoderIp} EncoderPort: {liveEventData.EncoderPort}");
+						}
 							break;
 						case "Microsoft.Media.LiveEventEncoderConnected":
-							{
-								MediaLiveEventEncoderConnectedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventEncoderConnectedEventData>();
-								Console.WriteLine($"LiveEvent encoder connected. IngestUrl: {liveEventData.IngestUrl} StreamId: {liveEventData.StreamId} " +
-									$"EncoderIp: {liveEventData.EncoderIp} EncoderPort: {liveEventData.EncoderPort}");
-							}
+						{
+							MediaLiveEventEncoderConnectedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventEncoderConnectedEventData>();
+							Console.WriteLine($"LiveEvent encoder connected. IngestUrl: {liveEventData.IngestUrl} StreamId: {liveEventData.StreamId} " +
+								$"EncoderIp: {liveEventData.EncoderIp} EncoderPort: {liveEventData.EncoderPort}");
+						}
 							break;
 						case "Microsoft.Media.LiveEventEncoderDisconnected":
-							{
-								MediaLiveEventEncoderDisconnectedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventEncoderDisconnectedEventData>();
-								Console.WriteLine($"LiveEvent encoder disconnected. IngestUrl: {liveEventData.IngestUrl} StreamId: {liveEventData.StreamId} " +
-									$"EncoderIp: {liveEventData.EncoderIp} EncoderPort: {liveEventData.EncoderPort}");
-							}
+						{
+							MediaLiveEventEncoderDisconnectedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventEncoderDisconnectedEventData>();
+							Console.WriteLine($"LiveEvent encoder disconnected. IngestUrl: {liveEventData.IngestUrl} StreamId: {liveEventData.StreamId} " +
+								$"EncoderIp: {liveEventData.EncoderIp} EncoderPort: {liveEventData.EncoderPort}");
+						}
 							break;
 
 						// LiveEvent Track-level events
 						case "Microsoft.Media.LiveEventIncomingDataChunkDropped":
-							{
-								MediaLiveEventIncomingDataChunkDroppedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventIncomingDataChunkDroppedEventData>();
-								Console.WriteLine($"LiveEvent data chunk dropped. LiveEventId: {eventName} ResultCode: {liveEventData.ResultCode}");
-							}
+						{
+							MediaLiveEventIncomingDataChunkDroppedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventIncomingDataChunkDroppedEventData>();
+							Console.WriteLine($"LiveEvent data chunk dropped. LiveEventId: {eventName} ResultCode: {liveEventData.ResultCode}");
+						}
 							break;
 						case "Microsoft.Media.LiveEventIncomingStreamReceived":
-							{
-								MediaLiveEventIncomingStreamReceivedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventIncomingStreamReceivedEventData>();
-								Console.WriteLine($"LiveEvent incoming stream received. IngestUrl: {liveEventData.IngestUrl} EncoderIp: {liveEventData.EncoderIp} " +
-									$"EncoderPort: {liveEventData.EncoderPort}");
-							}
+						{
+							MediaLiveEventIncomingStreamReceivedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventIncomingStreamReceivedEventData>();
+							Console.WriteLine($"LiveEvent incoming stream received. IngestUrl: {liveEventData.IngestUrl} EncoderIp: {liveEventData.EncoderIp} " +
+								$"EncoderPort: {liveEventData.EncoderPort}");
+						}
 							break;
 						case "Microsoft.Media.LiveEventIncomingStreamsOutOfSync":
-							{
-								//MediaLiveEventIncomingStreamsOutOfSyncEventData eventData = jObj.GetValue("data").ToObject<MediaLiveEventIncomingStreamsOutOfSyncEventData>();
-								Console.WriteLine($"LiveEvent incoming audio and video streams are out of sync. LiveEventId: {eventName}");
-							}
+						{
+							//MediaLiveEventIncomingStreamsOutOfSyncEventData eventData = jObj.GetValue("data").ToObject<MediaLiveEventIncomingStreamsOutOfSyncEventData>();
+							Console.WriteLine($"LiveEvent incoming audio and video streams are out of sync. LiveEventId: {eventName}");
+						}
 							break;
 						case "Microsoft.Media.LiveEventIncomingVideoStreamsOutOfSync":
-							{
-								//MediaLiveEventIncomingVideoStreamsOutOfSyncEventData eventData =jObj.GetValue("data").ToObject<MediaLiveEventIncomingVideoStreamsOutOfSyncEventData>();
-								Console.WriteLine($"LeveEvent incoming video streams are out of sync. LiveEventId: {eventName}");
-							}
+						{
+							//MediaLiveEventIncomingVideoStreamsOutOfSyncEventData eventData =jObj.GetValue("data").ToObject<MediaLiveEventIncomingVideoStreamsOutOfSyncEventData>();
+							Console.WriteLine($"LeveEvent incoming video streams are out of sync. LiveEventId: {eventName}");
+						}
 							break;
 						case "Microsoft.Media.LiveEventIngestHeartbeat":
-							{
-								MediaLiveEventIngestHeartbeatEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventIngestHeartbeatEventData>();
-								Console.WriteLine($"LiveEvent ingest heart beat. TrackType: {liveEventData.TrackType} State: {liveEventData.State} Healthy: {liveEventData.Healthy}");
-							}
+						{
+							MediaLiveEventIngestHeartbeatEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventIngestHeartbeatEventData>();
+							Console.WriteLine($"LiveEvent ingest heart beat. TrackType: {liveEventData.TrackType} State: {liveEventData.State} Healthy: {liveEventData.Healthy}");
+						}
 							break;
 						case "Microsoft.Media.LiveEventTrackDiscontinuityDetected":
-							{
-								MediaLiveEventTrackDiscontinuityDetectedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventTrackDiscontinuityDetectedEventData>();
-								Console.WriteLine($"LiveEvent discontinuity in the incoming track detected. LiveEventId: {eventName} TrackType: {liveEventData.TrackType} " +
-									$"Discontinuity gap: {liveEventData.DiscontinuityGap}");
-							}
+						{
+							MediaLiveEventTrackDiscontinuityDetectedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventTrackDiscontinuityDetectedEventData>();
+							Console.WriteLine($"LiveEvent discontinuity in the incoming track detected. LiveEventId: {eventName} TrackType: {liveEventData.TrackType} " +
+								$"Discontinuity gap: {liveEventData.DiscontinuityGap}");
+						}
 							break;
 					}
 				}

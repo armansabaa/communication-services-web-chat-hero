@@ -31,8 +31,8 @@ namespace Chat.Services.LiveStreaming
 				.Build();
 
 			var authResult = await app.AcquireTokenForClient(scopes)
-													 .ExecuteAsync()
-													 .ConfigureAwait(false);
+				.ExecuteAsync()
+				.ConfigureAwait(false);
 
 			return new TokenCredentials(authResult.AccessToken, TokenType);
 		}
