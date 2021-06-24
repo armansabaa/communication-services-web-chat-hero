@@ -57,16 +57,6 @@ namespace Chat.Services
 			get { return new Uri(_config["ArmEndpoint"]); }
 		}
 
-		public string EventHubConnectionString
-		{
-			get { return _config["EventHubConnectionString"]; }
-		}
-
-		public string EventHubName
-		{
-			get { return _config["EventHubName"]; }
-		}
-
 		public string StorageContainerName
 		{
 			get { return _config["StorageContainerName"]; }

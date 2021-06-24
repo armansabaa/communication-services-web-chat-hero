@@ -1,18 +1,10 @@
 ﻿using Chat.Models;
-using Microsoft.Azure.EventGrid.Models;
-using Microsoft.Azure.EventHubs;
-using Microsoft.Azure.EventHubs.Processor;
 using Microsoft.Azure.Management.Media;
 using Microsoft.Azure.Management.Media.Models;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Chat.Services.LiveStreaming
@@ -28,7 +20,6 @@ namespace Chat.Services.LiveStreaming
 		private string _liveOutputName;
 		private string _streamingLocatorName;
 		private string _streamingEndpointName;
-		private EventProcessorHost _eventProcessorHost;
 
 		public LiveStreamingService(IConfiguration appConfiguration, IMediaServiceClientFactory mediaServiceClientFactory)
 		{
@@ -44,6 +35,7 @@ namespace Chat.Services.LiveStreaming
 				return _startupResult;
 
 			_startupResult = new LiveStreamStartedResult();
+			Console.WriteLine("Starting live streaming");
 
 			IAzureMediaServicesClient serviceClient = await _mediaServiceClientFactory.CreateMediaServicesClientAsync(_config);
 
@@ -56,7 +48,6 @@ namespace Chat.Services.LiveStreaming
 			string drvAssetFilterName = "filter-" + uniqueness;
 			_streamingLocatorName = "streamingLocator" + uniqueness;
 			_streamingEndpointName = "default"; // Change this to your specific streaming endpoint name if not using "default"
-			_eventProcessorHost = null;
 
 			MediaService mediaService = await serviceClient.Mediaservices.GetAsync(_config.ResourceGroup, _config.AccountName);
 			IPRange allAllowIPRange = new IPRange(
@@ -144,29 +135,6 @@ namespace Chat.Services.LiveStreaming
 				}*/
 			);
 
-			try
-			{
-				// Please refer README for Event Hub and storage settings.
-				string StorageConnectionString = string.Format("DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}",
-					_config.StorageAccountName, _config.StorageAccountKey);
-
-				// Create a new host to process events from an Event Hub.
-				_eventProcessorHost = new EventProcessorHost(_config.EventHubName,
-					PartitionReceiver.DefaultConsumerGroupName, _config.EventHubConnectionString,
-					StorageConnectionString, _config.StorageContainerName);
-
-				// Registers the Event Processor Host and starts receiving messages.
-				await _eventProcessorHost.RegisterEventProcessorFactoryAsync(new MediaServicesEventProcessorFactory(_liveEventName),
-					EventProcessorOptions.DefaultOptions);
-			}
-			catch (Exception e)
-			{
-				_eventProcessorHost = null;
-
-				Console.WriteLine("Failed to connect to Event Hub, please refer README for Event Hub and storage settings. Skipping event monitoring...");
-				Console.WriteLine(e.Message);
-			}
-
 			liveEvent = await serviceClient.LiveEvents.CreateAsync(
 					_config.ResourceGroup,
 					_config.AccountName,
@@ -205,10 +173,6 @@ namespace Chat.Services.LiveStreaming
 			Console.WriteLine();
 
 			string previewEndpoint = liveEvent.Preview.Endpoints.First().Url;
-			Console.WriteLine($"The preview url is:");
-			Console.WriteLine($"\t{previewEndpoint}");
-			Console.WriteLine();
-
 			Console.WriteLine($"Open the live preview in your browser and use the Azure Media Player to monitor the preview playback:");
 			Console.WriteLine($"\thttps://ampdemo.azureedge.net/?url={previewEndpoint}&heuristicprofile=lowlatency");
 			Console.WriteLine();
@@ -252,10 +216,9 @@ namespace Chat.Services.LiveStreaming
 			var scheme = "https";
 			List<string> manifests = BuildManifestPaths(scheme, hostname, locator.StreamingLocatorId.ToString(), manifestName);
 			Console.WriteLine($"The HLS (MP4) manifest for the Live stream  : {manifests[0]}");
-			Console.WriteLine("Open the following URL to playback the live stream in an HLS compliant player (HLS.js, Shaka, ExoPlayer) or directly in an iOS device");
-			Console.WriteLine($"{manifests[0]}");
 			Console.WriteLine();
 			Console.WriteLine($"The DASH manifest for the Live stream is : {manifests[1]}");
+			Console.WriteLine();
 			Console.WriteLine("Open the following URL to playback the live stream from the LiveOutput in the Azure Media Player");
 			Console.WriteLine($"https://ampdemo.azureedge.net/?url={manifests[1]}&heuristicprofile=lowlatency");
 			Console.WriteLine();
@@ -266,6 +229,8 @@ namespace Chat.Services.LiveStreaming
 				LiveOutputUrl = manifests[1],
 				IngestUrl = ingestUrl
 			};
+
+			Console.WriteLine("Live streaming started");
 
 			return _startupResult;
 		}
@@ -279,16 +244,15 @@ namespace Chat.Services.LiveStreaming
 
 			_startupResult = null;
 
+			Console.WriteLine("Stopping live streaming");
+
 			IAzureMediaServicesClient serviceClient = await _mediaServiceClientFactory.CreateMediaServicesClientAsync(_config);
 			await CleanupLiveEventAndOutputAsync(serviceClient, _config.ResourceGroup, _config.AccountName, _liveEventName, _liveOutputName);
 			await CleanupLocatorandAssetAsync(serviceClient, _config.ResourceGroup, _config.AccountName, _streamingLocatorName, _assetName);
 
-			if (_eventProcessorHost != null)
-			{
-				await _eventProcessorHost.UnregisterEventProcessorAsync();
-			}
-
 			await serviceClient.StreamingEndpoints.StopAsync(_config.ResourceGroup, _config.AccountName, _streamingEndpointName);
+
+			Console.WriteLine("Live streaming stopped");
 		}
 
 		private static async Task CleanupLiveEventAndOutputAsync(IAzureMediaServicesClient client, string resourceGroup, string accountName, string liveEventName, string liveOutputName)
@@ -354,209 +318,6 @@ namespace Chat.Services.LiveStreaming
 			manifests.Add(dashManifest);
 
 			return manifests;
-		}
-
-		class MediaServicesEventProcessorFactory : IEventProcessorFactory
-		{
-			private readonly AutoResetEvent jobWaitingEvent;
-			private readonly string jobName;
-			private readonly string liveEventName;
-			public MediaServicesEventProcessorFactory(string jobName, AutoResetEvent jobWaitingEvent)
-			{
-				this.jobName = jobName;
-				this.jobWaitingEvent = jobWaitingEvent;
-				this.liveEventName = null;
-			}
-
-			public MediaServicesEventProcessorFactory(string liveEventName)
-			{
-				this.jobName = null;
-				this.jobWaitingEvent = null;
-				this.liveEventName = liveEventName;
-			}
-
-			IEventProcessor IEventProcessorFactory.CreateEventProcessor(PartitionContext context)
-			{
-				return new MediaServicesEventProcessor(jobName, jobWaitingEvent, liveEventName);
-			}
-		}
-
-		class MediaServicesEventProcessor : IEventProcessor
-		{
-			private readonly AutoResetEvent jobWaitingEvent;
-			private readonly string jobName;
-			private readonly string liveEventName;
-
-			public MediaServicesEventProcessor(string jobName, AutoResetEvent jobWaitingEvent, string liveEventName)
-			{
-				this.jobName = jobName;
-				this.jobWaitingEvent = jobWaitingEvent;
-				this.liveEventName = liveEventName;
-			}
-
-			public Task CloseAsync(PartitionContext context, CloseReason reason)
-			{
-				Console.WriteLine($"Processor Shutting Down. Partition '{context.PartitionId}', Reason: '{reason}'.");
-				return Task.CompletedTask;
-			}
-
-			public Task OpenAsync(PartitionContext context)
-			{
-				Console.WriteLine($"SimpleEventProcessor initialized. Partition: '{context.PartitionId}'");
-				return Task.CompletedTask;
-			}
-
-			public Task ProcessErrorAsync(PartitionContext context, Exception error)
-			{
-				Console.WriteLine($"Error on Partition: {context.PartitionId}, Error: {error.Message}");
-				return Task.CompletedTask;
-			}
-
-			public Task ProcessEventsAsync(PartitionContext context, IEnumerable<EventData> messages)
-			{
-				foreach (var eventData in messages)
-				{
-					PrintJobEvent(eventData);
-				}
-
-				return context.CheckpointAsync();
-			}
-
-			/// <summary>
-			/// Parse and print Media Services events.
-			/// </summary>
-			/// <param name="eventData">Event Hub event data.</param>
-			private void PrintJobEvent(EventData eventData)
-			{
-				var data = Encoding.UTF8.GetString(eventData.Body.Array, eventData.Body.Offset, eventData.Body.Count);
-				JArray jArr = JsonConvert.DeserializeObject<JArray>(data);
-				foreach (JObject jObj in jArr)
-				{
-					string eventType = (string)jObj.GetValue("eventType");
-					string subject = (string)jObj.GetValue("subject");
-					string eventName = Regex.Replace(subject, @"^.*/", "");
-					if (eventName != jobName && eventName != liveEventName)
-					{
-						return;
-					}
-
-					switch (eventType)
-					{
-						// Job state change events
-						case "Microsoft.Media.JobStateChange":
-						case "Microsoft.Media.JobScheduled":
-						case "Microsoft.Media.JobProcessing":
-						case "Microsoft.Media.JobCanceling":
-						case "Microsoft.Media.JobFinished":
-						case "Microsoft.Media.JobCanceled":
-						case "Microsoft.Media.JobErrored":
-						{
-							MediaJobStateChangeEventData jobEventData = jObj.GetValue("data").ToObject<MediaJobStateChangeEventData>();
-
-							Console.WriteLine($"Job state changed for JobId: {eventName} PreviousState: {jobEventData.PreviousState} State: {jobEventData.State}");
-
-							// For final states, send a message to notify that the job has finished.
-							if (eventType == "Microsoft.Media.JobFinished" || eventType == "Microsoft.Media.JobCanceled" || eventType == "Microsoft.Media.JobErrored")
-							{
-								// Job finished, send a message.
-								if (jobWaitingEvent != null)
-								{
-									jobWaitingEvent.Set();
-								}
-							}
-						}
-							break;
-
-						// Job output state change events
-						case "Microsoft.Media.JobOutputStateChange":
-						case "Microsoft.Media.JobOutputScheduled":
-						case "Microsoft.Media.JobOutputProcessing":
-						case "Microsoft.Media.JobOutputCanceling":
-						case "Microsoft.Media.JobOutputFinished":
-						case "Microsoft.Media.JobOutputCanceled":
-						case "Microsoft.Media.JobOutputErrored":
-						{
-							MediaJobOutputStateChangeEventData jobEventData = jObj.GetValue("data").ToObject<MediaJobOutputStateChangeEventData>();
-
-							Console.WriteLine($"Job output state changed for JobId: {eventName} PreviousState: {jobEventData.PreviousState} " +
-								$"State: {jobEventData.Output.State} Progress: {jobEventData.Output.Progress}%");
-						}
-							break;
-
-						// Job output progress event
-						case "Microsoft.Media.JobOutputProgress":
-						{
-							MediaJobOutputProgressEventData jobEventData = jObj.GetValue("data").ToObject<MediaJobOutputProgressEventData>();
-
-							Console.WriteLine($"Job output progress changed for JobId: {eventName} Progress: {jobEventData.Progress}%");
-						}
-							break;
-
-						// LiveEvent Stream-level events
-						case "Microsoft.Media.LiveEventConnectionRejected":
-						{
-							MediaLiveEventConnectionRejectedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventConnectionRejectedEventData>();
-							Console.WriteLine($"LiveEvent connection rejected. IngestUrl: {liveEventData.IngestUrl} StreamId: {liveEventData.StreamId} " +
-								$"EncoderIp: {liveEventData.EncoderIp} EncoderPort: {liveEventData.EncoderPort}");
-						}
-							break;
-						case "Microsoft.Media.LiveEventEncoderConnected":
-						{
-							MediaLiveEventEncoderConnectedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventEncoderConnectedEventData>();
-							Console.WriteLine($"LiveEvent encoder connected. IngestUrl: {liveEventData.IngestUrl} StreamId: {liveEventData.StreamId} " +
-								$"EncoderIp: {liveEventData.EncoderIp} EncoderPort: {liveEventData.EncoderPort}");
-						}
-							break;
-						case "Microsoft.Media.LiveEventEncoderDisconnected":
-						{
-							MediaLiveEventEncoderDisconnectedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventEncoderDisconnectedEventData>();
-							Console.WriteLine($"LiveEvent encoder disconnected. IngestUrl: {liveEventData.IngestUrl} StreamId: {liveEventData.StreamId} " +
-								$"EncoderIp: {liveEventData.EncoderIp} EncoderPort: {liveEventData.EncoderPort}");
-						}
-							break;
-
-						// LiveEvent Track-level events
-						case "Microsoft.Media.LiveEventIncomingDataChunkDropped":
-						{
-							MediaLiveEventIncomingDataChunkDroppedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventIncomingDataChunkDroppedEventData>();
-							Console.WriteLine($"LiveEvent data chunk dropped. LiveEventId: {eventName} ResultCode: {liveEventData.ResultCode}");
-						}
-							break;
-						case "Microsoft.Media.LiveEventIncomingStreamReceived":
-						{
-							MediaLiveEventIncomingStreamReceivedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventIncomingStreamReceivedEventData>();
-							Console.WriteLine($"LiveEvent incoming stream received. IngestUrl: {liveEventData.IngestUrl} EncoderIp: {liveEventData.EncoderIp} " +
-								$"EncoderPort: {liveEventData.EncoderPort}");
-						}
-							break;
-						case "Microsoft.Media.LiveEventIncomingStreamsOutOfSync":
-						{
-							//MediaLiveEventIncomingStreamsOutOfSyncEventData eventData = jObj.GetValue("data").ToObject<MediaLiveEventIncomingStreamsOutOfSyncEventData>();
-							Console.WriteLine($"LiveEvent incoming audio and video streams are out of sync. LiveEventId: {eventName}");
-						}
-							break;
-						case "Microsoft.Media.LiveEventIncomingVideoStreamsOutOfSync":
-						{
-							//MediaLiveEventIncomingVideoStreamsOutOfSyncEventData eventData =jObj.GetValue("data").ToObject<MediaLiveEventIncomingVideoStreamsOutOfSyncEventData>();
-							Console.WriteLine($"LeveEvent incoming video streams are out of sync. LiveEventId: {eventName}");
-						}
-							break;
-						case "Microsoft.Media.LiveEventIngestHeartbeat":
-						{
-							MediaLiveEventIngestHeartbeatEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventIngestHeartbeatEventData>();
-							Console.WriteLine($"LiveEvent ingest heart beat. TrackType: {liveEventData.TrackType} State: {liveEventData.State} Healthy: {liveEventData.Healthy}");
-						}
-							break;
-						case "Microsoft.Media.LiveEventTrackDiscontinuityDetected":
-						{
-							MediaLiveEventTrackDiscontinuityDetectedEventData liveEventData = jObj.GetValue("data").ToObject<MediaLiveEventTrackDiscontinuityDetectedEventData>();
-							Console.WriteLine($"LiveEvent discontinuity in the incoming track detected. LiveEventId: {eventName} TrackType: {liveEventData.TrackType} " +
-								$"Discontinuity gap: {liveEventData.DiscontinuityGap}");
-						}
-							break;
-					}
-				}
-			}
 		}
 
 	}
