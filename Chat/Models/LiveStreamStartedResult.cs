@@ -4,7 +4,6 @@
 	{
 		public string IngestUrl { get; set; }
 		public string LiveOutputUrl { get; set; }
-
 		public string PreviewUrl { get; set; }
 	}
 }

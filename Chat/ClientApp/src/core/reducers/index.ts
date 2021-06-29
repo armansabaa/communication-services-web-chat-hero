@@ -15,6 +15,7 @@ import { devicesReducer, DevicesState } from './devices';
 import { controlsReducer, ControlsState } from './controls';
 import { streamsReducer, StreamsState } from './streams';
 import { sdkReducer, SdkState } from './sdk';
+import { LiveStreamState } from './LiveStreamReducers';
 import { RemoteParticipant, RemoteVideoStream } from '@azure/communication-calling';
 import { CallTypes } from '../actions/calls';
 import { ControlTypes } from '../actions/controls';
@@ -30,17 +31,18 @@ export interface ParticipantStream {
 }
 
 export interface State {
-  chat: MessagesState;
-  contosoClient: ContosoState;
-  conversations: ConversationsState;
-  thread: ThreadState;
-  threadMembers: ThreadMembersState;
-  calls: CallsState;
-  devices: DevicesState;
-  controls: ControlsState;
-  sdk: SdkState;
-  streams: StreamsState;
-  event: EventState;
+    chat: MessagesState;
+    contosoClient: ContosoState;
+    conversations: ConversationsState;
+    thread: ThreadState;
+    threadMembers: ThreadMembersState;
+    calls: CallsState;
+    devices: DevicesState;
+    controls: ControlsState;
+    sdk: SdkState;
+    streams: StreamsState;
+    event: EventState;
+    liveStream: LiveStreamState;
 }
 
 type TotalActions =
