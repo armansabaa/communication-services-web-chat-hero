@@ -76,6 +76,7 @@ import { Constants } from './constants';
 import { setCallClient, setUserId } from './actions/sdk';
 import { addScreenShareStream, removeScreenShareStream } from './actions/streams';
 import { AcsRoom, setEvent, setRoomId } from './actions/EventAction';
+import { RestPost as PostRequest, RestGet, RestDelete, post as restPost, get as restGet, del as restDelete, REST_POST} from './actions/restActions';
 
 let _displayName: string, _emoji: string;
 
@@ -1195,6 +1196,22 @@ export const removeParticipant = async (call: Call, user: CommunicationUserKind)
   await call.removeParticipant(user).catch((e: CommunicationServicesError) => console.error(e));
 };
 
+export const startLiveStreaming = async (roomId: string): Promise<any> => {
+    let postRequest = {
+        url: "/livestream/" + roomId,
+        body: "{}"
+    };
+
+    return restPost(postRequest);
+}
+
+export const stopLiveStreaming = async (roomId: string): Promise<any> => {
+    let deleteRequest = {
+        url: "/livestream/" + roomId
+    };
+
+    return restDelete(deleteRequest);
+}
 
 export {
   sendMessage,
