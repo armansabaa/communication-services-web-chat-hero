@@ -4,7 +4,7 @@ import { getBackgroundColor } from '../../utils/utils';
 
 const responsiveLayoutStyle = mergeStyles({
   display: 'flex',
-  flexDirection: 'column',
+  flexDirection: 'row',
   selectors: {
     '@media (max-width: 37.5rem)': {
       flexDirection: 'column'
