@@ -31,6 +31,13 @@ namespace Chat.Services.LiveStreaming
 		{
 			// TODO: track live stream in each room
 
+			_startupResult = new LiveStreamStartedResult
+			{
+				LiveOutputUrl = "live output url",
+				IngestUrl = "ingest url",
+				PreviewUrl = "preview url"
+			};
+
 			if (_startupResult != null)
 				return _startupResult;
 
@@ -239,6 +246,7 @@ namespace Chat.Services.LiveStreaming
 		{
 			// TODO: track live stream in each room
 
+			_startupResult = null;
 			if (_startupResult == null)
 				return;
 
