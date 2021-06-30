@@ -15,7 +15,7 @@ import { devicesReducer, DevicesState } from './devices';
 import { controlsReducer, ControlsState } from './controls';
 import { streamsReducer, StreamsState } from './streams';
 import { sdkReducer, SdkState } from './sdk';
-import { LiveStreamState } from './LiveStreamReducers';
+import { LiveStreamState,LiveStreamReducer } from './LiveStreamReducers';
 import { RemoteParticipant, RemoteVideoStream } from '@azure/communication-calling';
 import { CallTypes } from '../actions/calls';
 import { ControlTypes } from '../actions/controls';
@@ -69,5 +69,6 @@ export const reducer = combineReducers({
   streams: streamsReducer,
   controls: controlsReducer,
   sdk: sdkReducer,
-  event: EventReducer
+  event: EventReducer,
+  liveStream: LiveStreamReducer
 });

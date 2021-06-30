@@ -1,16 +1,16 @@
-export const START_LIVE_STREAM = 'START_LIVE_STREAM';
+export const SET_LIVE_STREAM_DATA = 'SET_LIVE_STREAM_DATA';
 export const LISTEN_LIVE_STREAM = 'LISTEN_LIVE_STREAM';
 export const STOP_LIVE_STREAM = 'STOP_LIVE_STREAM';
 
-export interface StartActionResult {
+export interface StreamData {
     ingestUrl: string,
     liveOutputUrl: string,
     previewUrl: string
 }
 
 export interface StartLiveAction {
-    type: typeof START_LIVE_STREAM;
-    actionResult: StartActionResult
+    type: typeof SET_LIVE_STREAM_DATA;
+    streamData: StreamData
 }
 
 export interface ListenLiveStreamAction {
@@ -22,3 +22,8 @@ export interface StopLiveStreamAction {
 }
 
 export type LiveStreamActionType = StartLiveAction | ListenLiveStreamAction | StopLiveStreamAction;
+
+export const setStreamActionResult = (data: StreamData) : StartLiveAction => ({
+    type: SET_LIVE_STREAM_DATA,
+    streamData: data
+});

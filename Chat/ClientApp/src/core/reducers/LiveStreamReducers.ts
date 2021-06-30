@@ -1,36 +1,22 @@
-﻿import { StartActionResult, LiveStreamActionType, START_LIVE_STREAM, STOP_LIVE_STREAM } from '../actions/LiveStreamActions';
+﻿import { LiveStreamActionType as LiveStreamActionTypes, SET_LIVE_STREAM_DATA } from '../actions/LiveStreamActions';
 
 export interface LiveStreamState {
-    isLive: boolean;
-    ingestUrl: string;
+    liveStreamIngestUrl: string | undefined;
     amsUrl: string;
 }
 
-export interface LiveStreamControlProps {
-    currentState: LiveStreamState;
-    onStart: (roomId: string) => Promise<StartActionResult>;
-    onStop: (roomId: string) => Promise<void>;
-}
+const initLiveStreamState: LiveStreamState = {
+    liveStreamIngestUrl: undefined,
+    amsUrl: 'ams_url'
+};
 
-export const LiveStreamReducer = (state: any, action: LiveStreamActionType) => {
+export const LiveStreamReducer = (state = initLiveStreamState, action: LiveStreamActionTypes) => {
     switch (action.type) {
-        case START_LIVE_STREAM:
+        case SET_LIVE_STREAM_DATA:
             return {
                 ...state,
-                liveStream: {
-                    isLive: true,
-                    ingestUrl: action.actionResult.ingestUrl,
-                    amsUrl: action.actionResult.liveOutputUrl
-                }
-            };
-        case STOP_LIVE_STREAM:
-            return {
-                ...state,
-                liveStream: {
-                    isLive: false,
-                    ingestUrl: "",
-                    amsUrl: ""
-                }
+                liveStreamIngestUrl: action.streamData.ingestUrl,
+                amsUrl: action.streamData.liveOutputUrl
             };
         default:
             return state;
