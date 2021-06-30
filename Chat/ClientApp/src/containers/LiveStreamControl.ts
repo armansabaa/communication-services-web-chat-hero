@@ -1,29 +1,22 @@
 ﻿import { connect } from 'react-redux';
 import { State } from '../core/reducers';
 import axios from 'axios';
-import { LiveStreamControlProps, LiveStreamState } from '../core/reducers/LiveStreamReducers';
+import { LiveStreamControlProps } from '../core/reducers/LiveStreamReducers';
 import LiveStreamControl from '../components/LiveStreamControl';
-import { StartActionResult, LiveStreamActionType, START_LIVE_STREAM, STOP_LIVE_STREAM } from '../core/actions/LiveStreamActions'
+import { StartActionResult } from '../core/actions/LiveStreamActions'
 
 const mapStateToProps = (state: State, props: LiveStreamControlProps) => ({
     currentState: state.liveStream,
     onStart: async (roomId: string): Promise<StartActionResult> => {
-        return axios.post("/livestream/" + roomId);
+        return (await axios.post("/livestream/" + roomId)).data;
     },
     onStop: async (roomId: string): Promise<void> => {
-        return axios.delete("/livestream/" + roomId);
+        return (await axios.delete("/livestream/" + roomId)).data;
     }
 });
 
 const mapDispatchToProps = async (dispatch: any, props: LiveStreamControlProps) => {
-    let startResult = await props.onStart("room8");
-    return {
-        currentState: {
-            isLive: true,
-            ingestUrl: startResult.ingestUrl,
-            amsUrl: startResult.liveOutputUrl
-        }
-    };
+   
 };
 
 const connector: any = connect(mapStateToProps, mapDispatchToProps);

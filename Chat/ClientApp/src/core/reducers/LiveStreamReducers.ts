@@ -8,8 +8,8 @@ export interface LiveStreamState {
 
 export interface LiveStreamControlProps {
     currentState: LiveStreamState;
-    onStart: (roomId: string) => StartActionResult;
-    onStop: (roomId: string) => void;
+    onStart: (roomId: string) => Promise<StartActionResult>;
+    onStop: (roomId: string) => Promise<void>;
 }
 
 export const LiveStreamReducer = (state: any, action: LiveStreamActionType) => {
