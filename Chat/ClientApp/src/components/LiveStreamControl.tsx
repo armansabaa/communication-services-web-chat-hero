@@ -31,8 +31,8 @@ export default (props: LiveStreamControlProps): JSX.Element => {
         <div> 
             <DefaultButton className={liveStreamButton} onClick={
                 async (): Promise<void> => {
-                    let startResult = await startStream("room8");
-                    dispatch({ type: 'START_LIVE_STREAM', actionResult: startResult.data });
+                    let startResult = await props.onStart("room8");
+                    dispatch({ type: 'START_LIVE_STREAM', actionResult: startResult });
                 }
             }>Start LiveStream</DefaultButton>
             {props.currentState ? props.currentState.ingestUrl : "not set" }

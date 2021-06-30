@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import GroupCall from '../containers/GroupCall';
 import { TokenResponse } from '../containers/RoomMainArea';
 import Stream from './Stream';
-import LiveStreamControl from './LiveStreamControl';
+import LiveStreamControl from '../containers/LiveStreamControl';
 import { staticAreaStyle } from './styles/ChatScreen.styles';
 import { videoCameraIconStyle } from './styles/Configuration.styles';
 import { backButtonStyle, calendarIconStyle, headerTextStyle, roomMainAreaStackStyles,  timeIconStyle, joinCallButtonStyle, callAreaStyle, joinCallTextStyle } from './styles/RoomMainArea.styles';
