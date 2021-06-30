@@ -12,25 +12,27 @@ export interface LiveStreamControlProps {
     onStop: (roomId: string) => Promise<void>;
 }
 
-export const LiveStreamReducer = (state: any, action: LiveStreamActionType) => {
+export const initLiveState: LiveStreamState = {
+    isLive: false,
+    ingestUrl: "not yet defined",
+    amsUrl: "//amssamples.streaming.mediaservices.windows.net/3b970ae0-39d5-44bd-b3a3-3136143d6435/AzureMediaServicesPromo.ism/manifest"
+};
+
+export const LiveStreamReducer = (state = initLiveState, action: LiveStreamActionType) => {
     switch (action.type) {
         case START_LIVE_STREAM:
             return {
                 ...state,
-                liveStream: {
-                    isLive: true,
-                    ingestUrl: action.actionResult.ingestUrl,
-                    amsUrl: action.actionResult.liveOutputUrl
-                }
+                isLive: true,
+                ingestUrl: action.actionResult.ingestUrl,
+                amsUrl: action.actionResult.liveOutputUrl
             };
         case STOP_LIVE_STREAM:
             return {
                 ...state,
-                liveStream: {
-                    isLive: false,
-                    ingestUrl: "",
-                    amsUrl: ""
-                }
+                isLive: false,
+                ingestUrl: "",
+                amsUrl: ""
             };
         default:
             return state;

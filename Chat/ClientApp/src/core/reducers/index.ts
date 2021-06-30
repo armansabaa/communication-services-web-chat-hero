@@ -5,6 +5,7 @@ import { ConversationsActionTypes } from '../actions/ConversationsAction';
 import { MessagesActionTypes } from '../actions/MessagesAction';
 import { ThreadActionTypes } from '../actions/ThreadAction';
 import { ThreadMembersActionTypes } from '../actions/ThreadMembersAction';
+import { LiveStreamActionType } from '../actions/LiveStreamActions';
 import { ContosoReducer, ContosoState } from './ContosoClientReducers';
 import { ConversationsReducer, ConversationsState } from './ConversationsReducers';
 import { MessagesReducer, MessagesState } from './MessagesReducer';
@@ -15,7 +16,7 @@ import { devicesReducer, DevicesState } from './devices';
 import { controlsReducer, ControlsState } from './controls';
 import { streamsReducer, StreamsState } from './streams';
 import { sdkReducer, SdkState } from './sdk';
-import { LiveStreamState } from './LiveStreamReducers';
+import { LiveStreamReducer, LiveStreamState } from './LiveStreamReducers';
 import { RemoteParticipant, RemoteVideoStream } from '@azure/communication-calling';
 import { CallTypes } from '../actions/calls';
 import { ControlTypes } from '../actions/controls';
@@ -46,28 +47,30 @@ export interface State {
 }
 
 type TotalActions =
-  | MessagesActionTypes
-  | ContosoActionTypes
-  | ConversationsActionTypes
-  | ThreadActionTypes
-  | ThreadMembersActionTypes
-  | CallTypes
-  | ControlTypes
-  | DeviceTypes
-  | SdkTypes
-  | StreamTypes
-  | EventActionTypes;
+    | MessagesActionTypes
+    | ContosoActionTypes
+    | ConversationsActionTypes
+    | ThreadActionTypes
+    | ThreadMembersActionTypes
+    | CallTypes
+    | ControlTypes
+    | DeviceTypes
+    | SdkTypes
+    | StreamTypes
+    | EventActionTypes
+    | LiveStreamActionType;
 
 export const reducer = combineReducers({
-  chat: MessagesReducer,
-  contosoClient: ContosoReducer,
-  conversations: ConversationsReducer,
-  thread: ThreadReducer,
-  threadMembers: ThreadMembersReducer,
-  calls: callsReducer,
-  devices: devicesReducer,
-  streams: streamsReducer,
-  controls: controlsReducer,
-  sdk: sdkReducer,
-  event: EventReducer
+    chat: MessagesReducer,
+    contosoClient: ContosoReducer,
+    conversations: ConversationsReducer,
+    thread: ThreadReducer,
+    threadMembers: ThreadMembersReducer,
+    calls: callsReducer,
+    devices: devicesReducer,
+    streams: streamsReducer,
+    controls: controlsReducer,
+    sdk: sdkReducer,
+    event: EventReducer,
+    livestream: LiveStreamReducer
 });

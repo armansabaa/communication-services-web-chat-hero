@@ -5,19 +5,19 @@ import { LiveStreamControlProps } from '../core/reducers/LiveStreamReducers';
 import LiveStreamControl from '../components/LiveStreamControl';
 import { StartActionResult } from '../core/actions/LiveStreamActions'
 
-const mapStateToProps = (state: State, props: LiveStreamControlProps) => ({
-    currentState: state.liveStream,
-    onStart: async (roomId: string): Promise<StartActionResult> => {
-        return (await axios.post("/livestream/" + roomId)).data;
-    },
-    onStop: async (roomId: string): Promise<void> => {
-        return (await axios.delete("/livestream/" + roomId)).data;
-    }
-});
-
-const mapDispatchToProps = async (dispatch: any, props: LiveStreamControlProps) => {
-   
+const startStreaming = async (roomId: string): Promise<StartActionResult> => {
+    return (await axios.post("/livestream/" + roomId)).data;
 };
 
-const connector: any = connect(mapStateToProps, mapDispatchToProps);
+const stopStreaming = async (roomId: string): Promise<void> => {
+    return (await axios.delete("/livestream/" + roomId)).data;
+};
+
+const mapStateToProps = (state: State, props: LiveStreamControlProps) => ({
+    currentState: state.liveStream,
+    onStart: startStreaming,
+    onStop: stopStreaming
+});
+
+const connector: any = connect(mapStateToProps);
 export default connector(LiveStreamControl);
