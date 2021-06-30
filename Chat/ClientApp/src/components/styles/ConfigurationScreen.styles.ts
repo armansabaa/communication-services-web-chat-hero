@@ -1,4 +1,4 @@
-import { mergeStyles } from '@fluentui/react';
+import { IImageStyles, mergeStyles } from '@fluentui/react';
 
 import { getBackgroundColor } from '../../utils/utils';
 
@@ -208,6 +208,7 @@ const mainContainerStyle = mergeStyles({
   maxWidth: '46.875rem',
   width: '100%',
   height: '100%',
+  marginTop: '-10%',
   selectors: {
     '@media (max-width: 46.875rem)': {
       padding: '0.625rem',
@@ -219,6 +220,14 @@ const mainContainerStyle = mergeStyles({
 const startChatButtonTextStyle = mergeStyles({
   fontSize: '0.875rem' // 14px
 });
+
+const imageStyleProps: IImageStyles = {
+  image: {
+    height: '100%',
+    width: '100%'
+  },
+  root: {}
+};
 
 export {
   responsiveLayoutStyle,
@@ -241,5 +250,6 @@ export {
   chatIconStyle,
   buttonStyle,
   mainContainerStyle,
-  startChatButtonTextStyle
+  startChatButtonTextStyle,
+  imageStyleProps,
 };

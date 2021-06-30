@@ -5,7 +5,6 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import ChatScreen from './containers/ChatScreen';
-import EndScreen from './components/EndScreen';
 import RemovedFromThreadScreen from './components/RemovedFromThreadScreen';
 import HomeScreen from './containers/HomeScreen';
 
@@ -39,17 +38,6 @@ export default (): JSX.Element => {
       return (
         <ChatScreen
           removedFromThreadHandler={() => setPage('chat')}
-          leaveChatHandler={() => setPage('end')}
-        />
-      );
-    }
-    else if (page === 'end') {
-      return (
-        <EndScreen
-          rejoinHandler={() => {
-            window.location.href = window.location.href;
-          }}
-          homeHandler={() => (window.location.href = window.location.origin)}
         />
       );
     } else if (page === 'removedFromThread') {

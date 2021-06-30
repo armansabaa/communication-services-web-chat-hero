@@ -1,9 +1,9 @@
-import { PrimaryButton, Stack, Spinner } from '@fluentui/react';
+import { PrimaryButton, Stack, Spinner, Image } from '@fluentui/react';
 import { ChatIcon } from '@fluentui/react-icons-northstar';
 import React, { useEffect, useState } from 'react';
 import { FocusZone, FocusZoneDirection } from 'office-ui-fabric-react/lib/FocusZone';
 
-import { buttonStyle, chatIconStyle, mainContainerStyle } from './styles/ConfigurationScreen.styles';
+import { buttonStyle, chatIconStyle, imageStyleProps, mainContainerStyle } from './styles/ConfigurationScreen.styles';
 import {
   labelFontStyle,
   largeAvatarContainerStyle,
@@ -19,6 +19,9 @@ import {
 import { CAT, MOUSE, KOALA, OCTOPUS, MONKEY, FOX, getEventId } from '../utils/utils';
 import DisplayNameField from './DisplayNameField';
 import { MAXIMUM_LENGTH_OF_NAME } from '../constants';
+import heroSVG from '../assets/hero.svg';
+import { upperStackTokens } from './styles/EndChat.styles';
+import { upperStackStyle, headerStyle, imgStyle, containerTokens, eventHeaderTokens } from './styles/HomeScreen.styles';
 
 export interface ConfigurationScreenProps {
   joinChatHandler(): void;
@@ -27,7 +30,7 @@ export interface ConfigurationScreenProps {
 }
 
 export default (props: ConfigurationScreenProps): JSX.Element => {
-  const spinnerLabel = 'Initializing chat client...';
+  const spinnerLabel = 'Joining event...';
 
   const avatarsList = [CAT, MOUSE, KOALA, OCTOPUS, MONKEY, FOX];
   const [name, setName] = useState('');
@@ -57,12 +60,12 @@ export default (props: ConfigurationScreenProps): JSX.Element => {
       setEmptyWarning(false);
       setNameLengthExceedLimit(false);
       if (!isJoining) {
-        setup(name, selectedAvatar);
         setIsJoining(true);
+        setup(name, selectedAvatar);
       }
     }
   };
-  
+
   const getEventInfoProp = props.getEventInfo;
 
   useEffect(() => {
@@ -77,68 +80,86 @@ export default (props: ConfigurationScreenProps): JSX.Element => {
     return <Spinner label={spinnerLabel} ariaLive="assertive" labelPosition="top" />;
   };
 
+  const imageProps = { src: heroSVG.toString() };
+  const headerTitle = 'Virtual Event Hackathon';
+
   const joinChatArea = () => {
     return (
       <div>
-        <Stack className={responsiveLayoutStyle} horizontal={true} horizontalAlign="center" verticalAlign="center">
-          <Stack
-            className={leftPreviewContainerStyle}
-            horizontal={false}
-            verticalAlign="center"
-            horizontalAlign="center"
-            tokens={{ childrenGap: 13 }}
-          >
-            <div className={largeAvatarContainerStyle(selectedAvatar)}>
-              <div className={largeAvatarStyle}>{selectedAvatar}</div>
-            </div>
-            <div aria-label="Display name" className={namePreviewStyle(name !== '')}>
-              {name !== '' ? name : 'Name'}
-            </div>
-          </Stack>
-          <Stack className={rightInputContainerStyle} horizontal={false} tokens={{ childrenGap: 20 }}>
-            <div>
-              <div className={labelFontStyle}>Avatar</div>
-              <FocusZone direction={FocusZoneDirection.horizontal}>
-                <Stack role="list" horizontal={true} tokens={{ childrenGap: 4 }}>
-                  {avatarsList.map((avatar, index) => (
-                    <div
-                      role="listitem"
-                      id={avatar}
-                      key={index}
-                      tabIndex={0}
-                      data-is-focusable={true}
-                      className={smallAvatarContainerStyle(avatar, selectedAvatar)}
-                      onFocus={() => onAvatarChange(avatar)}
-                    >
-                      <div className={smallAvatarStyle}>{avatar}</div>
-                    </div>
-                  ))}
-                </Stack>
-              </FocusZone>
-            </div>
-            <DisplayNameField
-              setName={setName}
-              setEmptyWarning={setEmptyWarning}
-              setNameLengthExceedLimit={setNameLengthExceedLimit}
-              validateName={validateName}
-              isEmpty={emptyWarning}
-              isNameLengthExceedLimit={isNameLengthExceedLimit}
+        <Stack horizontalAlign="center" verticalAlign="center" tokens={containerTokens}>
+          <Stack horizontal horizontalAlign="center" verticalAlign="center" tokens={eventHeaderTokens}>
+            <Stack className={upperStackStyle} tokens={upperStackTokens}>
+              <div tabIndex={0} className={headerStyle}>
+                {headerTitle}
+              </div>
+              powered by ACS
+            </Stack>
+            <Image
+              styles={imageStyleProps}
+              alt="Virtual Event"
+              className={imgStyle}
+              {...imageProps}
             />
-            <div>
-              <PrimaryButton
-                id="join"
-                className={buttonStyle}
-                onClick={() => {
-                  validateName();
-                  if (emptyWarning === false && isNameLengthExceedLimit === false) {
-                    joinChatHandler();
-                  }
-                }}
-              >
-                <ChatIcon className={chatIconStyle} size="medium" />
-                <div className={startChatButtonTextStyle}>Join event</div>
-              </PrimaryButton>
-            </div>
+          </Stack>
+
+          <Stack horizontal horizontalAlign="center" verticalAlign="center" tokens={containerTokens}>
+            <Stack
+              className={leftPreviewContainerStyle}
+              verticalAlign="center"
+              horizontalAlign="center"
+              tokens={{ childrenGap: 13 }}>
+              <div className={largeAvatarContainerStyle(selectedAvatar)}>
+                <div className={largeAvatarStyle}>{selectedAvatar}</div>
+              </div>
+              <div aria-label="Display name" className={namePreviewStyle(name !== '')}>
+                {name !== '' ? name : 'Name'}
+              </div>
+            </Stack>
+            <Stack className={rightInputContainerStyle} tokens={{ childrenGap: 20 }}>
+              <div>
+                <div className={labelFontStyle}>Avatar</div>
+                <FocusZone direction={FocusZoneDirection.horizontal}>
+                  <Stack role="list" horizontal={true} tokens={{ childrenGap: 4 }}>
+                    {avatarsList.map((avatar, index) => (
+                      <div
+                        role="listitem"
+                        id={avatar}
+                        key={index}
+                        tabIndex={0}
+                        data-is-focusable={true}
+                        className={smallAvatarContainerStyle(avatar, selectedAvatar)}
+                        onFocus={() => onAvatarChange(avatar)}
+                      >
+                        <div className={smallAvatarStyle}>{avatar}</div>
+                      </div>
+                    ))}
+                  </Stack>
+                </FocusZone>
+              </div>
+              <DisplayNameField
+                setName={setName}
+                setEmptyWarning={setEmptyWarning}
+                setNameLengthExceedLimit={setNameLengthExceedLimit}
+                validateName={validateName}
+                isEmpty={emptyWarning}
+                isNameLengthExceedLimit={isNameLengthExceedLimit}
+              />
+              <div>
+                <PrimaryButton
+                  id="join"
+                  className={buttonStyle}
+                  onClick={async () => {
+                    await validateName();
+                    if (emptyWarning === false && isNameLengthExceedLimit === false) {
+                      joinChatHandler();
+                    }
+                  }}
+                >
+                  <ChatIcon className={chatIconStyle} size="medium" />
+                  <div className={startChatButtonTextStyle}>Join event</div>
+                </PrimaryButton>
+              </div>
+            </Stack>
           </Stack>
         </Stack>
       </div>

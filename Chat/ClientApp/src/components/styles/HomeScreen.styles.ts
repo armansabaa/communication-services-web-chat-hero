@@ -3,8 +3,8 @@ import { getTheme, IStackTokens, mergeStyles } from '@fluentui/react';
 const palette = getTheme().palette;
 
 const imgStyle = mergeStyles({
-  width: '26.813rem',
-  height: '20.125rem',
+  width: '15rem',
+  height: '15rem',
   selectors: {
     '@media (max-width: 53.438rem)': {
       display: 'none'
@@ -14,6 +14,10 @@ const imgStyle = mergeStyles({
 
 const containerTokens: IStackTokens = {
   childrenGap: 55
+};
+
+const eventHeaderTokens: IStackTokens = {
+  childrenGap: 0
 };
 
 const upperStackTokens: IStackTokens = {
@@ -91,5 +95,6 @@ export {
   buttonStyle,
   upperStackStyle,
   moreInfoStyle,
-  startChatTextStyle
+  startChatTextStyle,
+  eventHeaderTokens
 };
