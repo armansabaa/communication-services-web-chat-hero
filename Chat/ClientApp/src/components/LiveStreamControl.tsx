@@ -13,11 +13,11 @@ export interface LiveStreamControlProps {
 }
 
 const startStream = async (roomId: string): Promise<StreamData> => {
-  return axios.post('/livestream/' + roomId);
+  return (await axios.post('/livestream/' + roomId)).data;
 };
 
 const stopStream = async (roomId: string): Promise<void> => {
-  return axios.delete('/livestream/' + roomId);
+  return (await axios.delete('/livestream/' + roomId)).data;
 };
 
 export default (props: LiveStreamControlProps): JSX.Element => {
