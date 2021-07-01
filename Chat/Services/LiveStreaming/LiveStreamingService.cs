@@ -320,5 +320,9 @@ namespace Chat.Services.LiveStreaming
 			return manifests;
 		}
 
+		public Task<LiveStreamStartedResult> GetStartResult(string roomId)
+		{
+			return Task.FromResult(_startupResult);
+		}
 	}
 }

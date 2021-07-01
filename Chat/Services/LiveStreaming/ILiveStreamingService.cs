@@ -6,6 +6,7 @@ namespace Chat.Services.LiveStreaming
 	public interface ILiveStreamingService
 	{
 		Task<LiveStreamStartedResult> Start(string roomId);
+		Task<LiveStreamStartedResult> GetStartResult(string roomId);
 		Task Stop(string roomId);
 	}
 }
