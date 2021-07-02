@@ -42,8 +42,8 @@ namespace Chat
                             Title = "Global All Hands",
                             ChatSession = new AcsChatSession
                             {
-                                ThreadId = "19:4YD7S71M4TG0HEQWahNcgYfQ4KsYPjPdkKgHmDpEoSc1@thread.v2",
-                                ThreadModeratorId = "8:acs:85c99b9e-f6e1-408c-90d9-e37b6ad0e7c3_0000000a-baef-95a7-28c5-593a0d000c31",
+                                ThreadId = "19:s_701MHt__nd5NJT_IZ-zRnSvOTlQ-1pBmGI0xyieHQ1@thread.v2",
+                                ThreadModeratorId = "8:acs:85c99b9e-f6e1-408c-90d9-e37b6ad0e7c3_0000000b-0805-adef-b5bb-a43a0d002005",
                             },
                             CallingSessionId = "4fa24250-d478-11eb-a4fa-bb783cfd38e0"
                         }
