@@ -57,7 +57,7 @@ export default (props: RoomMainAreaProps): JSX.Element => {
   const unsupportedCallingHandler = () => { setIsCallingSupported(false); };
 
   useEffect(() => {
-    setupCallClient(unsupportedCallingHandler);
+    setUpAndJoinCall();
   }, []);
 
   const [localVideoStream, setLocalVideoStream] = useState(undefined);
@@ -65,7 +65,9 @@ export default (props: RoomMainAreaProps): JSX.Element => {
   const [isOnCall, setIsOnCall] = useState(false);
   const [isJoiningCall, setIsJoiningCall] = useState(false);
 
-  async function onJoinCallClicked() {
+  async function setUpAndJoinCall() {
+    await setupCallClient(unsupportedCallingHandler);
+
     setIsJoiningCall(true);
     let curCallAgent = callAgent;
 
@@ -105,20 +107,6 @@ export default (props: RoomMainAreaProps): JSX.Element => {
     else if (isJoiningCall) {
       return (
         <Spinner label="Joining call..." ariaLive="assertive" labelPosition="top" />
-      );
-    }
-    else {
-      return (
-        <PrimaryButton
-            id="joinCall"
-            role="main"
-            aria-label="Join Call"
-            className={joinCallButtonStyle}
-            onClick={() => { onJoinCallClicked(); }}
-          >
-            <AttendeeIcon className={videoCameraIconStyle} size="medium" />
-            <div className={joinCallTextStyle}>Join call</div>
-          </PrimaryButton>
       );
     }
   }

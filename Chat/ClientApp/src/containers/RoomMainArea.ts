@@ -8,7 +8,7 @@ import { setCallAgent, setGroup } from '../core/actions/calls';
 import { setRoomId } from '../core/actions/EventAction';
 import { setUserId } from '../core/actions/sdk';
 import { State } from '../core/reducers/index';
-import { addUserToRoomThread, setRoomThreadId, removeThreadMemberByUserId, initCallClient, registerToCallAgent, joinGroup, getRoomCallId, registerDevices } from '../core/sideEffects';
+import { addUserToRoomThread, setRoomThreadId, removeThreadMemberByUserId, initCallClient, registerToCallAgent, joinGroup, getRoomCallId, registerDevices, createCallAgent } from '../core/sideEffects';
 import { utils } from '../utils/utils';
 
 export type TokenResponse = {
@@ -36,6 +36,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   },
   setGroup: (groupId: string): void => dispatch(setGroup(groupId)),
   getRoomCallId: (): string => dispatch(getRoomCallId()),
+  createCallAgent: (tokenCredential: AzureCommunicationTokenCredential, displayName: string): CallAgent => dispatch(createCallAgent(tokenCredential, displayName))
 });
 
 const mapStateToProps = (state: State, props: RoomMainAreaProps) => ({
@@ -61,19 +62,6 @@ const mapStateToProps = (state: State, props: RoomMainAreaProps) => ({
       tokenCredential,
       userId
     };
-  },
-  createCallAgent: async (
-    tokenCredential: AzureCommunicationTokenCredential,
-    displayName: string
-  ): Promise<CallAgent> => {
-    const callClient = state.sdk.callClient;
-
-    if (callClient === undefined) {
-      throw new Error('CallClient is not initialized');
-    }
-
-    const callAgent: CallAgent = await callClient.createCallAgent(tokenCredential, { displayName });
-    return callAgent;
   },
   joinGroup: async (callAgent: CallAgent, groupId: string, localVideoStream: LocalVideoStream): Promise<void> => {
     callAgent &&
