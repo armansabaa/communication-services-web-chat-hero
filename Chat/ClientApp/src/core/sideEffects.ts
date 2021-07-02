@@ -79,6 +79,18 @@ import { AcsRoom, setEvent, setRoomId } from './actions/EventAction';
 
 let _displayName: string, _emoji: string;
 
+const createCallAgent = (tokenCredential: AzureCommunicationTokenCredential,
+  displayName: string) => async (dispatch: Dispatch, getState: () => State): Promise<CallAgent> => {
+  const callClient = getState().sdk.callClient;
+
+    if (callClient === undefined) {
+      throw new Error('CallClient is not initialized');
+    }
+
+    const callAgent: CallAgent = await callClient.createCallAgent(tokenCredential, { displayName });
+    return callAgent;
+}
+
 const addUserToRoomThread = () => async (dispatch: Dispatch, getState: () => State) => {
   let state: State = getState();
   if (state.thread.threadId === undefined) {
@@ -1226,5 +1238,6 @@ export {
   addUserToRoomThread,
   resetMessages,
   getRoomCallId,
-  getRooms
+  getRooms,
+  createCallAgent
 };
