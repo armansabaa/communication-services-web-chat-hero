@@ -17,7 +17,7 @@ import {
   fullWidth,
   controlButtonDisabledStyle
 } from './styles/MediaControls.styles';
-import { ParticipantStream } from 'core/reducers';
+import { ParticipantStream } from '../core/reducers';
 
 export interface MediaControlsProps {
   micActive: boolean;
