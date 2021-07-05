@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { streamMainStyle } from './styles/Stream.styles';
 import { StreamData } from '../core/actions/LiveStreamActions';
 
@@ -14,11 +14,16 @@ const startStream = async (roomId: string): Promise<StreamData> => {
 };
 
 export default (props: LiveStreamControlProps): JSX.Element => {
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const { startLiveStream } = props;
+  const [isStreaming, setIsStreaming] = useState(false);
 
   async function getLiveStreamURL() {
+    await delay(10000);
     let result = await startStream(props.roomId);
-    startLiveStream(result);
+    if (result.liveOutputUrl != null) {
+      startLiveStream(result);
+    }
     let createPlayer = () => {
       var myOptions = {
         autoplay: true,
@@ -27,15 +32,8 @@ export default (props: LiveStreamControlProps): JSX.Element => {
         height: '100%',
         poster: ''
       };
-
       let _window: any = window;
       var myPlayer = _window.amp('azuremediaplayer', myOptions);
-      myPlayer.src([
-        {
-          src: result.liveOutputUrl ? result.liveOutputUrl : props.liveStreamUrl,
-          type: 'application/vnd.ms-sstr+xml'
-        }
-      ]);
 
       return myPlayer;
     };
@@ -63,7 +61,11 @@ export default (props: LiveStreamControlProps): JSX.Element => {
         height="100%"
         poster="poster.jpg"
         data-setup='{"nativeControlsForTouch": false}'
-      ></video>
+        key={props.liveStreamUrl}
+      >
+        <source src={props.liveStreamUrl} type="application/vnd.ms-sstr+xml" />
+      </video>
+      {props.liveStreamUrl}
     </div>
   );
 };
