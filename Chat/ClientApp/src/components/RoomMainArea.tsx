@@ -15,7 +15,6 @@ export interface RoomMainAreaProps {
   userId: string;
   displayName: string;
   callAgent: CallAgent;
-  liveStream: LiveStreamState;
   setupRoom(): void;
   setRoomId(roomId: string): void;
   setRoomThreadId(roomId: string): void;
@@ -48,8 +47,7 @@ export default (props: RoomMainAreaProps): JSX.Element => {
     setupCallClient,
     callAgent,
     roomId,
-    setRoomId,
-    liveStream
+    setRoomId
   } = props;
 
   useEffect(() => {

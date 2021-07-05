@@ -1,9 +1,8 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect } from 'react';
 import { streamMainStyle } from './styles/Stream.styles';
-import { LiveStreamState } from '../core/reducers/LiveStream';
-import { LiveStreamActionType, SET_LIVE_STREAM_DATA, StreamData } from '../core/actions/LiveStreamActions';
+import { StreamData } from '../core/actions/LiveStreamActions';
 
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 export interface LiveStreamControlProps {
   roomId: string;
   liveStreamUrl: string;
@@ -18,7 +17,7 @@ export default (props: LiveStreamControlProps): JSX.Element => {
   const { startLiveStream } = props;
 
   async function getLiveStreamURL() {
-    let result = await startStream('room1');
+    let result = await startStream(props.roomId);
     startLiveStream(result);
     let createPlayer = () => {
       var myOptions = {
@@ -33,7 +32,7 @@ export default (props: LiveStreamControlProps): JSX.Element => {
       var myPlayer = _window.amp('azuremediaplayer', myOptions);
       myPlayer.src([
         {
-          src: result.liveOutputUrl,
+          src: result.liveOutputUrl ? result.liveOutputUrl : props.liveStreamUrl,
           type: 'application/vnd.ms-sstr+xml'
         }
       ]);

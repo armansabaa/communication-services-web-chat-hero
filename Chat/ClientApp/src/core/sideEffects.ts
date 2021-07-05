@@ -76,14 +76,12 @@ import { Constants } from './constants';
 import { setCallClient, setUserId } from './actions/sdk';
 import { addScreenShareStream, removeScreenShareStream } from './actions/streams';
 import { AcsRoom, setEvent, setRoomId } from './actions/EventAction';
-import { LiveStreamActionType, SET_LIVE_STREAM_DATA, StreamData } from '../core/actions/LiveStreamActions';
-import axios, { AxiosResponse } from 'axios';
 
 let _displayName: string, _emoji: string;
 
 const createCallAgent = (tokenCredential: AzureCommunicationTokenCredential,
   displayName: string) => async (dispatch: Dispatch, getState: () => State): Promise<CallAgent> => {
-    const callClient = getState().sdk.callClient;
+  const callClient = getState().sdk.callClient;
 
     if (callClient === undefined) {
       throw new Error('CallClient is not initialized');
@@ -91,7 +89,7 @@ const createCallAgent = (tokenCredential: AzureCommunicationTokenCredential,
 
     const callAgent: CallAgent = await callClient.createCallAgent(tokenCredential, { displayName });
     return callAgent;
-  }
+}
 
 const addUserToRoomThread = () => async (dispatch: Dispatch, getState: () => State) => {
   let state: State = getState();
@@ -100,14 +98,14 @@ const addUserToRoomThread = () => async (dispatch: Dispatch, getState: () => Sta
     return;
   }
   let contosoClient = state.contosoClient;
-  if (!contosoClient) {
+  if(!contosoClient){
     throw "Error: cannot add user to a room. contosoClient doesnt exist in state."
   }
   let chatClient = state.contosoClient.chatClient;
   let userId = state.contosoClient.user.identity;
   let userTokenString = state.contosoClient.user.token;
   let threadId: string = state.thread.threadId;
-  if (!chatClient || !userId || !userTokenString) {
+  if(!chatClient || !userId || !userTokenString){
     throw "Error: cannot add user to a room. One or more required state objects are missing.";
   }
   // set emoji for the user
@@ -188,7 +186,19 @@ const addUserToThread = (displayName: string, emoji: string) => async (dispatch:
   dispatch(setContosoUser(user.communicationUserId, userToken.token, displayName));
   dispatch(setChatClient(chatClient));
 
+  await addThreadMemberHelper(
+    threadId,
+    {
+      identity: user.communicationUserId,
+      token: userToken.token,
+      displayName: displayName,
+      memberRole: 'User'
+    },
+    dispatch
+  );
 
+  await getThreadInformation(chatClient, dispatch, getState);
+  await getMessages(chatClient, dispatch, getState);
 };
 
 const subscribeForTypingIndicator = async (chatClient: ChatClient, dispatch: Dispatch) => {
@@ -1198,7 +1208,6 @@ export const joinGroup = async (
     return;
   }
 };
-
 
 export const addParticipant = async (call: Call, user: CommunicationUserKind): Promise<void> => {
   await call.addParticipant(user);
