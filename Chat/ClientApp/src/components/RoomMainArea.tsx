@@ -1,14 +1,12 @@
 ﻿import { CallAgent, CallEndReason } from '@azure/communication-calling';
 import { AzureCommunicationTokenCredential } from '@azure/communication-common';
-import { ActionButton, FontIcon, IIconProps, PrimaryButton, Spinner, Stack } from '@fluentui/react';
-import { AttendeeIcon } from '@fluentui/react-icons-northstar';
+import { ActionButton, FontIcon, IIconProps, Spinner, Stack } from '@fluentui/react';
 import React, { useEffect, useState } from 'react';
 import GroupCall from '../containers/GroupCall';
 import { TokenResponse } from '../containers/RoomMainArea';
 import Stream from './Stream';
 import { staticAreaStyle } from './styles/ChatScreen.styles';
-import { videoCameraIconStyle } from './styles/Configuration.styles';
-import { backButtonStyle, calendarIconStyle, headerTextStyle, roomMainAreaStackStyles,  timeIconStyle, joinCallButtonStyle, callAreaStyle, joinCallTextStyle } from './styles/RoomMainArea.styles';
+import { backButtonStyle, calendarIconStyle, headerTextStyle, roomMainAreaStackStyles,  timeIconStyle, callAreaStyle } from './styles/RoomMainArea.styles';
 
 const backIcon: IIconProps = { iconName: 'Back' };
 
