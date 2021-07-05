@@ -6,8 +6,6 @@ import {
   CallVideoIcon,
   CallVideoOffIcon,
   CallEndIcon,
-  CallControlPresentNewIcon,
-  CallControlCloseTrayIcon
 } from '@fluentui/react-icons-northstar';
 import {
   controlButtonStyle,
@@ -15,7 +13,6 @@ import {
   endCallButtonTextStyle,
   mediaControlStyles,
   fullWidth,
-  controlButtonDisabledStyle
 } from './styles/MediaControls.styles';
 import { ParticipantStream } from '../core/reducers';
 

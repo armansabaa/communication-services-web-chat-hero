@@ -10,7 +10,6 @@ import {
   largeAvatarStyle,
   leftPreviewContainerStyle,
   namePreviewStyle,
-  responsiveLayoutStyle,
   rightInputContainerStyle,
   smallAvatarContainerStyle,
   smallAvatarStyle,
