@@ -75,7 +75,7 @@ import RemoteStreamSelector from './RemoteStreamSelector';
 import { Constants } from './constants';
 import { setCallClient, setUserId } from './actions/sdk';
 import { addScreenShareStream, removeScreenShareStream } from './actions/streams';
-import { AcsRoom, setEvent, setRoomId } from './actions/EventAction';
+import { AcsRoom, setEvent } from './actions/EventAction';
 
 let _displayName: string, _emoji: string;
 
@@ -411,16 +411,14 @@ const sendMessage = (messageContent: string) => async (dispatch: Dispatch, getSt
 const setRoomThreadId = (roomId: string) => async (dispatch: Dispatch, getState: () => State) => {
   let state: State = getState();
   let threadId;
+
   if (roomId === "main") {
-    threadId = state.event.event!.chatSession.threadId;
+    threadId = state.event.event?.chatSessionThreadId;
     console.log(`threadId: ${threadId}`);
   }
   else {
-    let room = state.event.event!.rooms[roomId];
-    let chatSession = room.chatSession;
-    if (chatSession) {
-      threadId = chatSession.threadId;
-    }
+    let room = state.event.event?.rooms[roomId];
+    threadId = !room ? undefined : room.chatSessionThreadId;
   }
   dispatch(setThreadId(threadId));
 }
@@ -445,7 +443,7 @@ const getEventInformation = (eventId: string) => async (dispatch: Dispatch) => {
       return response.json().then((result) => {
         console.log("Event Information: ", result);
         dispatch(setEvent(result))
-        dispatch(setThreadId(result.chatSession.threadId));
+        dispatch(setThreadId(result.chatSessionThreadId));
         return true;
       });
     } else {

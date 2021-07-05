@@ -24,6 +24,7 @@ namespace Chat
 
 			// This is purely for the handshake server
 			serviceCollection.AddSingleton<IChatAdminThreadStore, InMemoryChatAdminThreadStore>();
+			serviceCollection.AddSingleton<IEventsStore, InMemoryEventsStore>();
 			return serviceCollection;
 		}
 

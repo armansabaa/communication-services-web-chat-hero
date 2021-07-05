@@ -20,15 +20,17 @@ namespace Chat
 	public class ContosoHandshakeController : Controller
 	{
 		IUserTokenManager _userTokenManager;
-		IChatAdminThreadStore _store;
+		IChatAdminThreadStore _chatThreadStore;
+		IEventsStore _eventsStore;
 		string _chatGatewayUrl;
 		string _resourceConnectionString;
 
 		const string GUID_FOR_INITIAL_TOPIC_NAME = "c774da81-94d5-4652-85c7-6ed0e8dc67e6";
 
-		public ContosoHandshakeController(IChatAdminThreadStore store, IUserTokenManager userTokenManager, IConfiguration chatConfiguration)
+		public ContosoHandshakeController(IChatAdminThreadStore chatThreadStore, IEventsStore eventsStore, IUserTokenManager userTokenManager, IConfiguration chatConfiguration)
 		{
-			_store = store;
+			_chatThreadStore = chatThreadStore;
+			_eventsStore = eventsStore;
 			_userTokenManager = userTokenManager;
 			_chatGatewayUrl = Utils.ExtractApiChatGatewayUrl(chatConfiguration["ResourceConnectionString"]);
 			_resourceConnectionString = chatConfiguration["ResourceConnectionString"];
@@ -96,13 +98,13 @@ namespace Chat
 		/// <returns></returns>
 		[Route("event/{eventId}")]
 		[HttpGet]
-		public ActionResult<ACSEvent> getEventInformation(string eventId)
+		public ActionResult<ACSEvent> GetEventInformation(string eventId)
 		{
-			if (!_store.Store.ContainsKey(eventId))
+			if (!_eventsStore.Store.ContainsKey(eventId))
 			{
 				return NotFound();
 			}
-			return JsonSerializer.Deserialize<ACSEvent>(_store.Store[eventId]);
+			return _eventsStore.Store[eventId];
 		}
 
 		/// <summary>
@@ -113,7 +115,7 @@ namespace Chat
 		[HttpGet]
 		public ActionResult IsValidThread(string threadId)
 		{
-			if (!_store.Store.ContainsKey(threadId))
+			if (!_chatThreadStore.Store.ContainsKey(threadId))
 			{
 				return NotFound();
 			}
@@ -130,28 +132,17 @@ namespace Chat
 		[HttpPost]
 		public async Task<ActionResult> TryAddUserToThread(string threadId, ContosoMemberModel user)
 		{
-			//Still a little hard coded here
-			//Maybe we should be using Routes that add to the Room or to the Event
-			var eventInfo = JsonSerializer.Deserialize<ACSEvent>(_store.Store["acs_ve_06_07_2021"]);
-			ACSRoom[] rooms = new ACSRoom[eventInfo.Rooms.Values.Count];
-			eventInfo.Rooms.Values.CopyTo(rooms, 0);
-
-			string moderatorId;
-			if(eventInfo.ChatSession.ThreadId == threadId)
+            string moderatorId;
+            if (_chatThreadStore.Store.ContainsKey(threadId))
             {
-				moderatorId = eventInfo.ChatSession.ThreadModeratorId;
-			}
-			else if(Array.Exists(rooms, x => x.ChatSession.ThreadId == threadId))
-            {
-				var roomInfo = Array.Find(rooms, x => x.ChatSession.ThreadId == threadId);
-				moderatorId = roomInfo.ChatSession.ThreadModeratorId;
+                moderatorId = _chatThreadStore.Store[threadId];
             }
-			else
+            else
             {
-				return NotFound();
+                return NotFound();
             }
 
-			AccessToken moderatorToken = await _userTokenManager.GenerateTokenAsync(_resourceConnectionString, moderatorId);
+            AccessToken moderatorToken = await _userTokenManager.GenerateTokenAsync(_resourceConnectionString, moderatorId);
 
 			ChatClient chatClient = new ChatClient(
 				new Uri(_chatGatewayUrl),
@@ -197,7 +188,7 @@ namespace Chat
 
 			var threadId = result.Value.ChatThread.Id;
 
-			_store.Store.Add(threadId, moderatorId);
+			_chatThreadStore.Store.Add(threadId, moderatorId);
 			return threadId;
 		}
 	}
