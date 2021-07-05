@@ -1,5 +1,5 @@
 import { Stack, TextField, PrimaryButton, Icon, StackItem } from '@fluentui/react';
-import React, { useEffect, useState, Dispatch } from 'react';
+import React, { useState, Dispatch } from 'react';
 import { FocusZone, FocusZoneDirection } from 'office-ui-fabric-react/lib/FocusZone';
 
 import { ENTER_KEY, GUID_FOR_INITIAL_TOPIC_NAME, MAXIMUM_LENGTH_OF_TOPIC } from '../../src/constants';

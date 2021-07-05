@@ -31,5 +31,13 @@ namespace Chat
 
 			return this.Ok();
 		}
+
+		[Route("livestream/{roomId}")]
+		[HttpGet]
+		public async Task<IActionResult> Get(string roomId)
+		{
+			var startResult = await _liveStreamingService.GetStartResult(roomId);
+			return this.Ok(startResult);
+		}
 	}
 }

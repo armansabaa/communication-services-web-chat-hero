@@ -79,6 +79,18 @@ import { AcsRoom, setEvent } from './actions/EventAction';
 
 let _displayName: string, _emoji: string;
 
+const createCallAgent = (tokenCredential: AzureCommunicationTokenCredential,
+  displayName: string) => async (dispatch: Dispatch, getState: () => State): Promise<CallAgent> => {
+  const callClient = getState().sdk.callClient;
+
+    if (callClient === undefined) {
+      throw new Error('CallClient is not initialized');
+    }
+
+    const callAgent: CallAgent = await callClient.createCallAgent(tokenCredential, { displayName });
+    return callAgent;
+}
+
 const addUserToRoomThread = () => async (dispatch: Dispatch, getState: () => State) => {
   let state: State = getState();
   if (state.thread.threadId === undefined) {
@@ -1138,6 +1150,19 @@ export const registerToCallAgent = (
   };
 };
 
+export const registerDevices = () => {
+  return async (dispatch: Dispatch, getState: () => State): Promise<void> => {
+    let callClient = getState().sdk.callClient;
+    if (callClient === undefined) {
+      throw new Error('CallClient is not initialized');
+    }
+
+    const deviceManager: DeviceManager = await callClient.getDeviceManager();
+    dispatch(setDeviceManager(deviceManager));
+    subscribeToDeviceManager(deviceManager, dispatch, getState);
+  };
+};
+
 export const initCallClient = (unsupportedStateHandler: () => void) => {
   return async (dispatch: Dispatch, getState: () => State): Promise<void> => {
     let callClient;
@@ -1149,7 +1174,7 @@ export const initCallClient = (unsupportedStateHandler: () => void) => {
     }
 
     try {
-      setLogLevel('verbose');
+      //setLogLevel('verbose');
       callClient = new CallClient();
     } catch (e) {
       unsupportedStateHandler();
@@ -1160,10 +1185,7 @@ export const initCallClient = (unsupportedStateHandler: () => void) => {
       return;
     }
 
-    const deviceManager: DeviceManager = await callClient.getDeviceManager();
     dispatch(setCallClient(callClient));
-    dispatch(setDeviceManager(deviceManager));
-    subscribeToDeviceManager(deviceManager, dispatch, getState);
   };
 };
 
@@ -1214,5 +1236,6 @@ export {
   addUserToRoomThread,
   resetMessages,
   getRoomCallId,
-  getRooms
+  getRooms,
+  createCallAgent
 };

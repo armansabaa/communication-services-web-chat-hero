@@ -26,8 +26,8 @@ namespace Chat
         //This maps threadId > moderatorUid
         private void InitializeHardCodedValues()
         {
-            Store.Add("19:YmjddgUQEvDM6hRDD8eGFTK4fdbqpRD-jVME8zwjed81@thread.v2", "8:acs:85c99b9e-f6e1-408c-90d9-e37b6ad0e7c3_0000000a-e65d-db6b-f40f-343a0d00c1d6");
-            Store.Add("19:4YD7S71M4TG0HEQWahNcgYfQ4KsYPjPdkKgHmDpEoSc1@thread.v2", "8:acs:85c99b9e-f6e1-408c-90d9-e37b6ad0e7c3_0000000a-baef-95a7-28c5-593a0d000c31");
+            Store.Add("19:Ytl68hCH36NP5lQFE_EQain8ACl9qOiSdw2dytem4QM1@thread.v2", "8:acs:85c99b9e-f6e1-408c-90d9-e37b6ad0e7c3_0000000b-17b9-7405-54b7-a43a0d0017fa");
+            Store.Add("19:gD9iUbus0ZWQjGJ-oATDlX4cu8wH6FeJE7uPe2LFLUQ1@thread.v2", "8:acs:85c99b9e-f6e1-408c-90d9-e37b6ad0e7c3_0000000b-17b5-ce49-80f5-8b3a0d00e461");
         }
     }
 }

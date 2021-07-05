@@ -1,5 +1,5 @@
 // © Microsoft Corporation. All rights reserved.
-import { Icon, Image, PrimaryButton, Stack, IImageStyles, Spinner } from '@fluentui/react';
+import { Image, PrimaryButton, Stack, IImageStyles, Spinner } from '@fluentui/react';
 import { AttendeeIcon } from '@fluentui/react-icons-northstar';
 import React, { useState } from 'react';
 
@@ -8,11 +8,7 @@ import {
   buttonStyle,
   containerTokens,
   headerStyle,
-  iconStyle,
   imgStyle,
-  listStyle,
-  moreInfoStyle,
-  nestedStackTokens,
   upperStackStyle,
   upperStackTokens,
   videoCameraIconStyle,
