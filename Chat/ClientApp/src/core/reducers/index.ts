@@ -23,6 +23,7 @@ import { SdkTypes } from '../actions/sdk';
 import { StreamTypes } from '../actions/streams';
 import { EventActionTypes } from '../actions/EventAction';
 import { EventState, EventReducer } from './EventReducers';
+import { LiveStreamState, LiveStreamReducer } from './LiveStream';
 
 export interface ParticipantStream {
   user: RemoteParticipant;
@@ -41,6 +42,7 @@ export interface State {
   sdk: SdkState;
   streams: StreamsState;
   event: EventState;
+  liveStream: LiveStreamState;
 }
 
 type TotalActions =
@@ -67,5 +69,6 @@ export const reducer = combineReducers({
   streams: streamsReducer,
   controls: controlsReducer,
   sdk: sdkReducer,
-  event: EventReducer
+  event: EventReducer,
+  liveStream: LiveStreamReducer,
 });

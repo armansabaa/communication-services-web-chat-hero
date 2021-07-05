@@ -4,7 +4,7 @@ import { ActionButton, FontIcon, IIconProps, Spinner, Stack } from '@fluentui/re
 import React, { useEffect, useState } from 'react';
 import GroupCall from '../containers/GroupCall';
 import { TokenResponse } from '../containers/RoomMainArea';
-import Stream from './Stream';
+import LiveStream from '../containers/LiveStream';
 import { staticAreaStyle } from './styles/ChatScreen.styles';
 import { backButtonStyle, calendarIconStyle, headerTextStyle, roomMainAreaStackStyles,  timeIconStyle, callAreaStyle } from './styles/RoomMainArea.styles';
 
@@ -15,6 +15,7 @@ export interface RoomMainAreaProps {
   userId: string;
   displayName: string;
   callAgent: CallAgent;
+  liveStream: LiveStreamState;
   setupRoom(): void;
   setRoomId(roomId: string): void;
   setRoomThreadId(roomId: string): void;
@@ -37,22 +38,36 @@ export interface RoomMainAreaProps {
 }
 
 export default (props: RoomMainAreaProps): JSX.Element => {
-  const { setupRoom, setRoomThreadId, backToChatScreenHander, removeChatParticipantById, setGroup, callId, setupCallClient, callAgent, roomId, setRoomId } = props;
+  const {
+    setupRoom,
+    setRoomThreadId,
+    backToChatScreenHander,
+    removeChatParticipantById,
+    setGroup,
+    callId,
+    setupCallClient,
+    callAgent,
+    roomId,
+    setRoomId,
+    liveStream
+  } = props;
 
-  useEffect(()=>{
+  useEffect(() => {
     setRoomThreadId(roomId);
     setupRoom();
   }, []);
 
   const backButtonHandler = () => {
     removeChatParticipantById(props.userId);
-    setRoomId("main");
-    setRoomThreadId("main");
+    setRoomId('main');
+    setRoomThreadId('main');
     setupRoom();
     backToChatScreenHander(); //does this do anything?
-  }
+  };
 
-  const unsupportedCallingHandler = () => { setIsCallingSupported(false); };
+  const unsupportedCallingHandler = () => {
+    setIsCallingSupported(false);
+  };
 
   useEffect(() => {
     setUpAndJoinCall();
@@ -78,7 +93,7 @@ export default (props: RoomMainAreaProps): JSX.Element => {
       //3. Register for calling events
       props.registerToCallEvents(userId, curCallAgent, props.callEndedHandler);
     }
-    
+
     //4. Join the call
     await props.joinGroup(curCallAgent, callId);
     setGroup(callId);
@@ -94,18 +109,15 @@ export default (props: RoomMainAreaProps): JSX.Element => {
     if (isOnCall) {
       return (
         <GroupCall
-            endCallHandler={(): void => setIsOnCall(false)}
-            groupId={callId}
-            screenWidth={250}
-            localVideoStream={localVideoStream}
-            setLocalVideoStream={setLocalVideoStream}
-          />
+          endCallHandler={(): void => setIsOnCall(false)}
+          groupId={callId}
+          screenWidth={250}
+          localVideoStream={localVideoStream}
+          setLocalVideoStream={setLocalVideoStream}
+        />
       );
-    }
-    else if (isJoiningCall) {
-      return (
-        <Spinner label="Joining call..." ariaLive="assertive" labelPosition="top" />
-      );
+    } else if (isJoiningCall) {
+      return <Spinner label="Joining call..." ariaLive="assertive" labelPosition="top" />;
     }
   }
 
@@ -114,10 +126,8 @@ export default (props: RoomMainAreaProps): JSX.Element => {
       <ActionButton className={backButtonStyle} iconProps={backIcon} onClick={backButtonHandler}>
         Back to all rooms
       </ActionButton>
-      <h1>
-        {props.roomTitle}
-      </ h1>
-      <Stack styles={roomMainAreaStackStyles} >
+      <h1>{props.roomTitle}</h1>
+      <Stack styles={roomMainAreaStackStyles}>
         <h3 className={headerTextStyle}>
           <FontIcon aria-label="Calendar" iconName="Calendar" className={calendarIconStyle} />
           June 9th, 2021
@@ -127,11 +137,8 @@ export default (props: RoomMainAreaProps): JSX.Element => {
           08:00AM - 12:00PM PST (UTC - 8:00)
         </h3>
       </Stack>
-      <Stream />
-      <div className={callAreaStyle}>
-        {getCallComponent()}
-      </div>
+      <LiveStream />
+      <div className={callAreaStyle}>{getCallComponent()}</div>
     </div>
   );
 };
-
