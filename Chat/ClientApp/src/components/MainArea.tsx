@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Checkbox, DefaultButton, IconButton, IIconProps, Image, IStackTokens, Modal, PrimaryButton, Stack, TextField } from '@fluentui/react';
+import { DefaultButton, IconButton, IIconProps, Image, IStackTokens, Modal, PrimaryButton, Stack, TextField } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
 import defaultImg from '../assets/default.png';
 import { staticImageStyle, staticAreaStyle } from './styles/ChatScreen.styles';
@@ -30,15 +30,10 @@ const iconButtonStyles = {
     color: 'gray',
   },
 };
-const outerStackTokens: IStackTokens = {
-  childrenGap: 5,
-  padding: 10
-};
 
 export default (props: MainScreenProps): JSX.Element => {
   const imageProps = { src: defaultImg.toString() };
-  const { contents, roomTitle, setMainArea, getRooms, setActiveRoom, createRoom } = props;
-  const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
+  const { contents, roomTitle, setMainArea, getRooms, setActiveRoom } = props;
 
   const getComponent = () => {
     if (contents === 'welcome') {
@@ -59,36 +54,7 @@ export default (props: MainScreenProps): JSX.Element => {
                 return <DefaultButton className={tileStyle} text={value[1].title} onClick={() => { setMainArea({ contentType: "room", roomTitle: value[1].title }); setActiveRoom(value[1].id); props.resetMessages(); }} />
               })
             }
-            <DefaultButton className={tileStyle} text="Add New Room" onClick={showModal} />
           </Stack>
-          <Modal
-            isOpen={isModalOpen}
-            onDismiss={hideModal}
-            isModeless={true}
-          >
-            <Stack horizontal>
-              <Stack.Item align="start">
-                <h2>Create a new room</h2>
-              </Stack.Item>
-              <Stack.Item align="end">
-                <IconButton
-                  styles={iconButtonStyles}
-                  iconProps={cancelIcon}
-                  ariaLabel="Close popup modal"
-                  onClick={hideModal}
-                />
-              </Stack.Item>
-            </Stack>
-            <Stack tokens={outerStackTokens}>
-              <TextField label="Room Topic" />
-              <Checkbox label="Enable Chat" />
-              <Checkbox label="Enable Calling" />
-              <PrimaryButton onClick={(e) => {
-                createRoom();
-                hideModal();
-              }} text="Create Room" />
-            </Stack>
-          </Modal>
         </div>
       );
     } else if (contents === 'room') {
