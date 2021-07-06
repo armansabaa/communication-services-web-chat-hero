@@ -33,7 +33,7 @@ export default (props: LiveStreamControlProps): JSX.Element => {
 
   async function getLiveStreamURL() {
     while (!isLiveStreaming) {
-      await delay(10000);
+      await delay(2000);
       let result = await startStream(props.roomId);
       if (result && result.liveOutputUrl) {
         startLiveStream(result);
