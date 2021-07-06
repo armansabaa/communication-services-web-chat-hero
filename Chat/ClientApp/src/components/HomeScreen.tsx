@@ -1,6 +1,6 @@
 // © Microsoft Corporation. All rights reserved.
 import { Image, PrimaryButton, Stack, IImageStyles, Spinner } from '@fluentui/react';
-import { AttendeeIcon } from '@fluentui/react-icons-northstar';
+import { AttendeeIcon, LockIcon } from '@fluentui/react-icons-northstar';
 import React, { useState } from 'react';
 
 import heroSVG from '../assets/hero.svg';
@@ -17,6 +17,7 @@ import {
 
 export interface HomeScreenProps {
   createThreadHandler(): void;
+  logInPageHandler(): void;
 }
 
 const imageStyleProps: IImageStyles = {
@@ -31,6 +32,7 @@ export default (props: HomeScreenProps): JSX.Element => {
   const imageProps = { src: heroSVG.toString() };
   const headerTitle = 'Virtual Event Hackathon';
   const startChatButtonText = 'Join Event';
+  const organizerLogInButtonText = 'Log In as Organizer';
 
   const [isCreatingThread, setIsCreatingThread] = useState(false);
 
@@ -67,6 +69,18 @@ export default (props: HomeScreenProps): JSX.Element => {
             >
               <AttendeeIcon className={videoCameraIconStyle} size="medium" />
               <div className={startChatTextStyle}>{startChatButtonText}</div>
+            </PrimaryButton>
+            <PrimaryButton
+              id="organizer"
+              role="main"
+              aria-label="Log in as organizer"
+              className={buttonStyle}
+              onClick={() => {
+                props.logInPageHandler();
+              }}
+            >
+              <LockIcon className={videoCameraIconStyle} size="medium" />
+              <div className={startChatTextStyle}>{organizerLogInButtonText}</div>
             </PrimaryButton>
           </Stack>
           <Image

@@ -12,6 +12,8 @@ import { reducer } from './core/reducers/index';
 import { getBuildTime, getChatSDKVersion, getEventId } from './utils/utils';
 
 import ConfigurationScreen from './containers/ConfigurationScreen';
+import LoginScreen from './components/LoginScreen';
+import OrganizerLandingScreen from './components/OrganizerLandingScreen';
 
 console.info(`Azure Communication Services chat sample using @azure/communication-chat : ${getChatSDKVersion()}`);
 console.info(`Build Date : ${getBuildTime()}`);
@@ -31,10 +33,15 @@ export default (): JSX.Element => {
     }
 
     if (page === 'home') {
-      return <HomeScreen />;
+      return <HomeScreen logInPageHandler={() => setPage('organizerLogin')} />;
     } else if (page === 'chatConfiguration') {
       return <ConfigurationScreen joinChatHandler={() => setPage('chat')} />;
-    } else if (page === 'chat') {
+    } else if (page === 'organizerLogin') {
+      return <LoginScreen loginSuccessfulHandler={() => setPage('organizerLanding')} />
+    } else if (page === 'organizerLanding') {
+      return <OrganizerLandingScreen backToHomeHandler={() => setPage('home') }/>
+    }
+    else if (page === 'chat') {
       return (
         <ChatScreen
           removedFromThreadHandler={() => setPage('chat')}
