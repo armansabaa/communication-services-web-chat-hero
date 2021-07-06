@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { streamMainStyle } from './styles/Stream.styles';
 
-export interface AzuremediaplayerProps {
+export interface AzureMediaPlayerProps {
   liveStreamUrl: string;
+  isLiveStreaming: boolean;
 }
-export default (props: AzuremediaplayerProps): JSX.Element => {
+
+export default (props: AzureMediaPlayerProps): JSX.Element => {
   useEffect(() => {
-    console.log(props.liveStreamUrl);
     let createPlayer = () => {
       var myOptions = {
         autoplay: true,
@@ -40,6 +41,7 @@ export default (props: AzuremediaplayerProps): JSX.Element => {
       className="azuremediaplayer amp-default-skin"
       autoPlay
       controls
+      loop={!props.isLiveStreaming}
       width="100%"
       height="100%"
       poster="poster.jpg"

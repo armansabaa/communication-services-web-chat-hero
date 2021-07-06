@@ -20,7 +20,6 @@ loadTheme({});
 initializeIcons();
 
 const store = createStore(reducer, applyMiddleware(thunk));
-console.log(store.getState());
 
 export default (): JSX.Element => {
   const [page, setPage] = useState('home');
