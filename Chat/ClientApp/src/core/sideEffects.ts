@@ -140,8 +140,8 @@ const addUserToThread = (displayName: string, emoji: string) => async (dispatch:
   let state: State = getState();
   _displayName = displayName;
   _emoji = emoji;
-  if (state.thread.threadId === undefined) {
-    console.error('Thread Id not created yet');
+  if (!state.thread.threadId) {
+    console.error('No Thread Id'); //but this is ok, for rooms without a thread
     return;
   }
   let threadId: string = state.thread.threadId;
