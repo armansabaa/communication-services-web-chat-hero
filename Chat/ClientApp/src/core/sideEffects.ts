@@ -93,8 +93,8 @@ const createCallAgent = (tokenCredential: AzureCommunicationTokenCredential,
 
 const addUserToRoomThread = () => async (dispatch: Dispatch, getState: () => State) => {
   let state: State = getState();
-  if (state.thread.threadId === undefined) {
-    console.error('Thread Id not created yet');
+  if (!state.thread.threadId) {
+    console.error('No Thread Id'); //but this is ok, for rooms without a thread
     return;
   }
   let contosoClient = state.contosoClient;
