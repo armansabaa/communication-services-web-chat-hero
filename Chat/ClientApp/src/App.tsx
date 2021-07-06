@@ -20,12 +20,12 @@ loadTheme({});
 initializeIcons();
 
 const store = createStore(reducer, applyMiddleware(thunk));
+console.log(store.getState());
 
 export default (): JSX.Element => {
   const [page, setPage] = useState('home');
 
   const getComponent = () => {
-
     if (getEventId() && page === 'home') {
       setPage('chatConfiguration');
     }
@@ -35,11 +35,7 @@ export default (): JSX.Element => {
     } else if (page === 'chatConfiguration') {
       return <ConfigurationScreen joinChatHandler={() => setPage('chat')} />;
     } else if (page === 'chat') {
-      return (
-        <ChatScreen
-          removedFromThreadHandler={() => setPage('chat')}
-        />
-      );
+      return <ChatScreen removedFromThreadHandler={() => setPage('chat')} />;
     } else if (page === 'removedFromThread') {
       return <RemovedFromThreadScreen homeHandler={() => (window.location.href = window.location.origin)} />;
     }
