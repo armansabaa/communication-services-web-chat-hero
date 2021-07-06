@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { DefaultButton, Image, Stack } from '@fluentui/react';
+import { Checkbox, DefaultButton, IconButton, IIconProps, Image, IStackTokens, Modal, PrimaryButton, Stack, TextField } from '@fluentui/react';
+import { useBoolean } from '@fluentui/react-hooks';
 import defaultImg from '../assets/default.png';
 import { staticImageStyle, staticAreaStyle } from './styles/ChatScreen.styles';
 import { tilesStackStyles, tilesStackTokens, tileStyle } from './styles/RoomTile.styles';
@@ -15,32 +16,79 @@ export interface MainScreenProps {
   setActiveRoom(rId: string): void;
 }
 
+const cancelIcon: IIconProps = { iconName: 'Cancel' };
+
+const iconButtonStyles = {
+  root: {
+    color: 'gainsboro',
+    marginLeft: 'auto',
+    marginTop: '4px',
+    marginRight: '2px',
+  },
+  rootHovered: {
+    color: 'gray',
+  },
+};
+const outerStackTokens: IStackTokens = {
+  childrenGap: 5,
+  padding: 10
+};
+
 export default (props: MainScreenProps): JSX.Element => {
   const imageProps = { src: defaultImg.toString() };
   const { contents, roomTitle, setMainArea, getRooms, setActiveRoom } = props;
+  const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
 
   const getComponent = () => {
     if (contents === 'welcome') {
-        const rooms = getRooms();
-        return (
-          <div className={staticAreaStyle}>
+      const rooms = getRooms();
+      return (
+        <div className={staticAreaStyle}>
           <Image
             className={staticImageStyle}
             alt="Default Event Image"
             {...imageProps}
           />
           <h2>Event Description</h2>
-          Welcome to Contoso Fest 2021! Check out the latest announcements at our gloabl all-hands, see our cutting edge Contoso tech in demo sessions, or Ask Anything of our fearless leadership team.
+            Welcome to Contoso Fest 2021! Check out the latest announcements at our gloabl all-hands, see our cutting edge Contoso tech in demo sessions, or Ask Anything of our fearless leadership team.
           <h2>Upcoming Sessions</h2>
-            <Stack horizontal horizontalAlign="space-evenly" styles={tilesStackStyles} tokens={tilesStackTokens}>
-              {
-                Object.entries(rooms).map((value) => {
-                  return <DefaultButton className={tileStyle} text={value[1].title} onClick={() => { setMainArea({ contentType: "room", roomTitle: value[1].title }); setActiveRoom(value[1].id); props.resetMessages(); }} />
-                })
-              }
+          <Stack horizontal horizontalAlign="space-evenly" styles={tilesStackStyles} tokens={tilesStackTokens}>
+            {
+              Object.entries(rooms).map((value) => {
+                return <DefaultButton className={tileStyle} text={value[1].title} onClick={() => { setMainArea({ contentType: "room", roomTitle: value[1].title }); setActiveRoom(value[1].id); props.resetMessages(); }} />
+              })
+            }
+            <DefaultButton className={tileStyle} text="Add New Room" onClick={showModal} />
           </Stack>
+          <Modal
+            isOpen={isModalOpen}
+            onDismiss={hideModal}
+            isModeless={true}
+          >
+            <Stack horizontal>
+              <Stack.Item align="start">
+                <h2>Create a new room</h2>
+              </Stack.Item>
+              <Stack.Item align="end">
+                <IconButton
+                  styles={iconButtonStyles}
+                  iconProps={cancelIcon}
+                  ariaLabel="Close popup modal"
+                  onClick={hideModal}
+                />
+              </Stack.Item>
+            </Stack>
+            <Stack tokens={outerStackTokens}>
+              <TextField label="Room Topic" />
+              <Checkbox label="Enable Chat" />
+              <Checkbox label="Enable Calling" />
+              <PrimaryButton onClick={(e) => {
+                hideModal();
+              }} text="Create Room" />
+            </Stack>
+          </Modal>
         </div>
-        );
+      );
     } else if (contents === 'room') {
       return (
         <div className={staticAreaStyle}>
