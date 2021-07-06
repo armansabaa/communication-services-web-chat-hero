@@ -6,7 +6,7 @@ namespace Chat
 {
 	public interface IEventsStore
 	{
-		// [event id -> moderator id] 
+		// [event id -> event object] 
 		Dictionary<string, ACSEvent> Store { get; }
 	}
 
