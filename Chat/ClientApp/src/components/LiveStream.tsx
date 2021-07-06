@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿﻿import React, { useEffect, useState } from 'react';
 import { streamMainStyle } from './styles/Stream.styles';
 import { StreamData } from '../core/actions/LiveStreamActions';
 import AzureMediaPlayer from './AzureMediaPlayer';
@@ -11,7 +11,19 @@ export interface LiveStreamControlProps {
 }
 
 const startStream = async (roomId: string): Promise<StreamData> => {
-  return (await axios.get('/livestream/' + roomId)).data;
+  return await axios.get('/livestream/' + roomId)
+  .then(response => {
+    if(response.status == 204){
+      console.log("LiveStream - No content available");  
+    }
+    else {
+      console.log(response);
+    }
+    return response.data;
+  }).catch (e => {
+    console.error("LiveStream - Error: ", e);
+    return null;
+  })
 };
 
 export default (props: LiveStreamControlProps): JSX.Element => {
@@ -23,7 +35,7 @@ export default (props: LiveStreamControlProps): JSX.Element => {
     while (!isLiveStreaming) {
       await delay(10000);
       let result = await startStream(props.roomId);
-      if (result.liveOutputUrl != null) {
+      if (result && result.liveOutputUrl) {
         startLiveStream(result);
         setIsLiveStreaming(true);
         break;
