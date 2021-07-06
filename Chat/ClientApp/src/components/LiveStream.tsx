@@ -1,9 +1,9 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿﻿import React, { useEffect, useState } from 'react';
 import { streamMainStyle } from './styles/Stream.styles';
 import { StreamData } from '../core/actions/LiveStreamActions';
 import AzureMediaPlayer from './AzureMediaPlayer';
-
 import axios from 'axios';
+
 export interface LiveStreamControlProps {
   roomId: string;
   liveStreamUrl: string;
@@ -29,15 +29,15 @@ const startStream = async (roomId: string): Promise<StreamData> => {
 export default (props: LiveStreamControlProps): JSX.Element => {
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const { startLiveStream, liveStreamUrl } = props;
-  const [isStreaming, setIsStreaming] = useState(false);
+  const [isLiveStreaming, setIsLiveStreaming] = useState(false);
 
   async function getLiveStreamURL() {
-    while (!isStreaming) {
+    while (!isLiveStreaming) {
       await delay(2000);
       let result = await startStream(props.roomId);
-      if (result!= null && result.liveOutputUrl != null) {
+      if (result && result.liveOutputUrl) {
         startLiveStream(result);
-        setIsStreaming(true);
+        setIsLiveStreaming(true);
         break;
       }
     }
@@ -45,13 +45,12 @@ export default (props: LiveStreamControlProps): JSX.Element => {
 
   useEffect(() => {
     getLiveStreamURL();
-    console.log(props.liveStreamUrl);
   }, []);
 
   return (
     <div className={streamMainStyle}>
       <div className={streamMainStyle} key={props.liveStreamUrl + props.roomId}>
-        <AzureMediaPlayer liveStreamUrl={props.liveStreamUrl}></AzureMediaPlayer>
+        <AzureMediaPlayer isLiveStreaming={isLiveStreaming} liveStreamUrl={props.liveStreamUrl}></AzureMediaPlayer>
       </div>
     </div>
   );
