@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import { DefaultButton, IconButton, IIconProps, Image, IStackTokens, Modal, PrimaryButton, Stack, TextField } from '@fluentui/react';
-import { useBoolean } from '@fluentui/react-hooks';
+import React from 'react';
+import { DefaultButton, Image, Stack} from '@fluentui/react';
 import defaultImg from '../assets/default.png';
 import { staticImageStyle, staticAreaStyle } from './styles/ChatScreen.styles';
 import { tilesStackStyles, tilesStackTokens, tileStyle } from './styles/RoomTile.styles';
@@ -17,20 +16,6 @@ export interface MainScreenProps {
   createRoom(): void;
 }
 
-const cancelIcon: IIconProps = { iconName: 'Cancel' };
-
-const iconButtonStyles = {
-  root: {
-    color: 'gainsboro',
-    marginLeft: 'auto',
-    marginTop: '4px',
-    marginRight: '2px',
-  },
-  rootHovered: {
-    color: 'gray',
-  },
-};
-
 export default (props: MainScreenProps): JSX.Element => {
   const imageProps = { src: defaultImg.toString() };
   const { contents, roomTitle, setMainArea, getRooms, setActiveRoom } = props;
@@ -46,7 +31,7 @@ export default (props: MainScreenProps): JSX.Element => {
             {...imageProps}
           />
           <h2>Event Description</h2>
-            Welcome to Contoso Fest 2021! Check out the latest announcements at our gloabl all-hands, see our cutting edge Contoso tech in demo sessions, or Ask Anything of our fearless leadership team.
+            Welcome to Contoso Fest 2021! Check out the latest announcements at our global all-hands, see our cutting edge Contoso tech in demo sessions, or Ask Anything of our fearless leadership team.
           <h2>Upcoming Sessions</h2>
           <Stack horizontal horizontalAlign="space-evenly" styles={tilesStackStyles} tokens={tilesStackTokens}>
             {
