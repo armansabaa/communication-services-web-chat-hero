@@ -13,7 +13,6 @@ export interface MainScreenProps {
   resetMessages(): void;
   getRooms(): Record<string, AcsRoom>;
   setActiveRoom(rId: string): void;
-  createRoom(): void;
 }
 
 export default (props: MainScreenProps): JSX.Element => {
