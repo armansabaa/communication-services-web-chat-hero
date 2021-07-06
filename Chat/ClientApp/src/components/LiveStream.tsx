@@ -11,7 +11,19 @@ export interface LiveStreamControlProps {
 }
 
 const startStream = async (roomId: string): Promise<StreamData> => {
-  return (await axios.get('/livestream/' + roomId)).data;
+  return await axios.get('/livestream/' + roomId)
+  .then(response => {
+    if(response.status == 204){
+      console.log("LiveStream - No content available");  
+    }
+    else {
+      console.log(response);
+    }
+    return response.data;
+  }).catch (e => {
+    console.log("LiveStream - Stream is not ready yet");
+    return null;
+  })
 };
 
 export default (props: LiveStreamControlProps): JSX.Element => {
@@ -21,9 +33,12 @@ export default (props: LiveStreamControlProps): JSX.Element => {
 
   async function getLiveStreamURL() {
     while (!isStreaming) {
-      await delay(10000);
+      await delay(1000);
       let result = await startStream(props.roomId);
-      if (result.liveOutputUrl != null) {
+      if(Object.keys(result).length === 0){
+        break;
+      }
+      if (result!= null && result.liveOutputUrl != null) {
         startLiveStream(result);
         setIsStreaming(true);
         break;
