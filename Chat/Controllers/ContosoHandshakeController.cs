@@ -109,6 +109,41 @@ namespace Chat
         }
 
         /// <summary>
+        /// Adds a new Room. To the event, then returns the full event details
+        /// </summary>
+        /// <returns></returns>
+        [Route("event/{eventId}/rooms")]
+        [HttpPost]
+        public async Task<ActionResult<ACSEvent>> AddRoomToEvent(string eventId, [FromBody] ACSRoomRequestModel roomRequest)
+        {
+            if (!_eventsStore.Store.ContainsKey(eventId))
+            {
+                return NotFound();
+            }
+            ACSEvent acsEvent = _eventsStore.Store[eventId];
+
+            ACSRoom room = new ACSRoom
+            {
+                Id = Guid.NewGuid().ToString(),
+                Title = roomRequest.Title
+            };
+
+            if (roomRequest.EnableChat)
+            {
+                room.ChatSessionThreadId = await InternalGenerateNewModeratorAndThread();
+            }
+
+            if(roomRequest.EnableCalling)
+            {
+                //TODO: we haven't implemented dynamic calling yet
+            }
+
+            //Add to the database!
+            acsEvent.Rooms.Add(room.Id, room);
+            return acsEvent; //Process the newly added room after!
+        }
+
+        /// <summary>
         /// Check if a given thread Id exists in our in memory dictionary
         /// </summary>
         /// <returns></returns>
