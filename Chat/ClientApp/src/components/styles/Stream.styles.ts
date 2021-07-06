@@ -5,7 +5,7 @@ const streamMainStyle = mergeStyles({
   width: '100%',
   maxHeight: '500px',
   background: '#d2d0ce',
-  overflow: 'auto',
+  overflow: 'hidden',
   display: 'flex',
   justifyContent: 'space-around',
   flexDirection: 'column',

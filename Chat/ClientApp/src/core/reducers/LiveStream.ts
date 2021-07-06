@@ -5,7 +5,7 @@ export interface LiveStreamState {
 }
 
 const initLiveStreamState = {
-    liveStreamUrl: '//amssamples.streaming.mediaservices.windows.net/3b970ae0-39d5-44bd-b3a3-3136143d6435/AzureMediaServicesPromo.ism/manifest',
+    liveStreamUrl: 'https://watchartymediaservice-usea.streaming.media.azure.net/98a40988-e897-4cf1-830f-8436b47784d7/startingSoon.ism/manifest',
 };
 
 export const LiveStreamReducer = (state:LiveStreamState = initLiveStreamState, action: LiveStreamActionTypes) => {
