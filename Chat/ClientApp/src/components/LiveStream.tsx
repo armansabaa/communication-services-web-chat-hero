@@ -21,7 +21,7 @@ const startStream = async (roomId: string): Promise<StreamData> => {
     }
     return response.data;
   }).catch (e => {
-    console.log("LiveStream - Stream is not ready yet");
+    console.error("LiveStream - Error: ", e);
     return null;
   })
 };
@@ -33,11 +33,8 @@ export default (props: LiveStreamControlProps): JSX.Element => {
 
   async function getLiveStreamURL() {
     while (!isStreaming) {
-      await delay(1000);
+      await delay(2000);
       let result = await startStream(props.roomId);
-      if(Object.keys(result).length === 0){
-        break;
-      }
       if (result!= null && result.liveOutputUrl != null) {
         startLiveStream(result);
         setIsStreaming(true);
