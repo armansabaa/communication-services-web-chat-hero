@@ -3,19 +3,14 @@ export const SET_ROOM_ID = 'SET_ROOM_ID';
 
 export interface AcsEvent {
   id: string;
-  chatSession: AcsChatSession;
+  chatSessionThreadId: string;
   rooms: Record<string, AcsRoom>;
-}
-
-export interface AcsChatSession {
-  threadId: string;
-  threadModeratorId: string;
 }
 
 export interface AcsRoom {
   id: string;
   title: string;
-  chatSession: AcsChatSession;
+  chatSessionThreadId: string;
   callingSessionId: string;
 }
 
