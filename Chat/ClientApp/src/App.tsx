@@ -13,7 +13,7 @@ import { getBuildTime, getChatSDKVersion, getEventId } from './utils/utils';
 
 import ConfigurationScreen from './containers/ConfigurationScreen';
 import LoginScreen from './components/LoginScreen';
-import OrganizerLandingScreen from './components/OrganizerLandingScreen';
+import OrganizerLandingScreen from './containers/OrganizerLandingScreen';
 
 console.info(`Azure Communication Services chat sample using @azure/communication-chat : ${getChatSDKVersion()}`);
 console.info(`Build Date : ${getBuildTime()}`);

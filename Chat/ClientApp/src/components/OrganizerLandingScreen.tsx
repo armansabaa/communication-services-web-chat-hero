@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Checkbox, IStackTokens, PrimaryButton, Stack, TextField } from '@fluentui/react';
 import { containerTokens, eventHeaderTokens, headerStyle, upperStackStyle, upperStackTokens } from './styles/HomeScreen.styles';
 
 export interface OrganizerLandingScreenProps {
   backToHomeHandler(): void;
+  createRoom(roomTitle: string, enableChat: boolean, enableCalling: boolean): void;
+  getEventInfo(): void;
 }
 
 const outerStackTokens: IStackTokens = {
@@ -12,6 +14,34 @@ const outerStackTokens: IStackTokens = {
 };
 
 export default (props: OrganizerLandingScreenProps): JSX.Element => {
+
+  const [title, setTitle] = useState('');
+  const [enableChat, setEnableChat] = useState(false);
+  const [enableCall, setEnableCall] = useState(false);
+
+  const onRoomTopicChange = (event: any) => {
+    if (event.target.value) {
+      setTitle(event.target.value);
+    }
+  };
+
+  const onEnableChatChange = (event: any) => {
+    if (event.target.value && event.target.value == 'on') {
+      setEnableChat(true);
+    } else {
+      setEnableChat(false);
+    }
+  };
+
+  const onEnableCallChange = (event: any) => {
+    if (event.target.value && event.target.value == 'on') {
+      setEnableCall(true);
+    } else {
+      setEnableCall(false);
+
+    }
+  };
+
   return (
     <div>
       <Stack horizontalAlign="center" verticalAlign="center" tokens={containerTokens}>
@@ -24,11 +54,15 @@ export default (props: OrganizerLandingScreenProps): JSX.Element => {
             </Stack>
         </Stack>
       <Stack tokens={outerStackTokens}>
-        <TextField label="Room Topic" />
-        <Checkbox label="Enable Chat" />
-        <Checkbox label="Enable Calling" />
-        <PrimaryButton onClick={(e) => {
-        }} text="Create Room" />
+          <TextField label="Room Topic" onChange={onRoomTopicChange}/>
+          <Checkbox label="Enable Chat" onChange={onEnableChatChange}/>
+          <Checkbox label="Enable Calling" onChange={onEnableCallChange}/>
+          <PrimaryButton
+            onClick={async (e) => {
+              await props.getEventInfo();
+              await props.createRoom(title, enableChat, enableCall);
+            }}
+            text="Create Room" />
           <PrimaryButton
             onClick={(e) => {
               props.backToHomeHandler();

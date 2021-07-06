@@ -447,14 +447,14 @@ const getRoomCallId = () => (dispatch: Dispatch, getState: () => State) => {
   return callingSessionId;
 }
 
-const createRoom = () => async (dispatch: Dispatch, getState: () => State) => {
+const createRoom = (roomTitle: string, enableChat: boolean, enableCalling: boolean) => async (dispatch: Dispatch, getState: () => State) => {
   try {
     let state: State = getState();
     let eventId = state.event.event?.id;
     const requestBody = {
-      title: "Test",
-      enableChat: true,
-      enableCalling: false
+      title: roomTitle,
+      enableChat: enableChat,
+      enableCalling: enableCalling
     };
     let roomRequestOptions = {
       method: 'POST',
