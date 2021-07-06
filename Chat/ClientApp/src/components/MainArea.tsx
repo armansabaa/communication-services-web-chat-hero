@@ -14,6 +14,7 @@ export interface MainScreenProps {
   resetMessages(): void;
   getRooms(): Record<string, AcsRoom>;
   setActiveRoom(rId: string): void;
+  createRoom(): void;
 }
 
 const cancelIcon: IIconProps = { iconName: 'Cancel' };
@@ -36,7 +37,7 @@ const outerStackTokens: IStackTokens = {
 
 export default (props: MainScreenProps): JSX.Element => {
   const imageProps = { src: defaultImg.toString() };
-  const { contents, roomTitle, setMainArea, getRooms, setActiveRoom } = props;
+  const { contents, roomTitle, setMainArea, getRooms, setActiveRoom, createRoom } = props;
   const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
 
   const getComponent = () => {
@@ -83,6 +84,7 @@ export default (props: MainScreenProps): JSX.Element => {
               <Checkbox label="Enable Chat" />
               <Checkbox label="Enable Calling" />
               <PrimaryButton onClick={(e) => {
+                createRoom();
                 hideModal();
               }} text="Create Room" />
             </Stack>

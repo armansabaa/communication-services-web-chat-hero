@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import MainArea from '../components/MainArea';
 import { AcsRoom, setRoomId } from '../core/actions/EventAction';
-import { getRooms, resetMessages } from '../core/sideEffects';
+import { createRoom, getRooms, resetMessages } from '../core/sideEffects';
 
 const mapDispatchToProps = (dispatch: any) => ({
   resetMessages: () => {
@@ -11,6 +11,9 @@ const mapDispatchToProps = (dispatch: any) => ({
   getRooms: (): Record<string, AcsRoom> => dispatch(getRooms()),
   setActiveRoom: (roomId: string) => {
     dispatch(setRoomId(roomId));
+  },
+  createRoom: () => {
+    dispatch(createRoom());
   }
 });
 

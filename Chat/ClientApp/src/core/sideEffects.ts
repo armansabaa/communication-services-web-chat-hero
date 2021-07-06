@@ -447,6 +447,37 @@ const getRoomCallId = () => (dispatch: Dispatch, getState: () => State) => {
   return callingSessionId;
 }
 
+const createRoom = () => async (dispatch: Dispatch, getState: () => State) => {
+  try {
+    let state: State = getState();
+    let eventId = state.event.event?.id;
+    const requestBody = {
+      title: "Test",
+      enableChat: true,
+      enableCalling: false
+    };
+    let roomRequestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody)
+    };
+    let response = await fetch('/event/' + eventId + '/rooms', roomRequestOptions);
+    if (response.status === 200) {
+      return response.json().then((result) => {
+        console.log("Added Room in Event: ", result);
+        dispatch(setEvent(result));
+        return true;
+      });
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error('Failed at adding a new room: ', error);
+  }
+}
+
 const getEventInformation = (eventId: string) => async (dispatch: Dispatch) => {
   try {
     let validationRequestOptions = { method: 'GET' };
@@ -1237,5 +1268,6 @@ export {
   resetMessages,
   getRoomCallId,
   getRooms,
-  createCallAgent
+  createCallAgent,
+  createRoom
 };
