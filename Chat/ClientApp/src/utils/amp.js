@@ -32728,7 +32728,7 @@ function a(b, c, d) {
                   muted: this.options_.muted,
                   poster: this.poster(),
                   language: this.language(),
-                  "vtt.js": this.options_["vtt.js"],
+                  "vtt.js": "https://cdnjs.cloudflare.com/ajax/libs/vtt.js/0.12.1/vtt.min.js",
                   staleDataTimeLimitInSec: this.options_.staleDataTimeLimitInSec
               }, this.options_[A["default"](a)]);
               e.playerOptions = O["default"]({}, this.options_),

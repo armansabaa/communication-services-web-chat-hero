@@ -123,7 +123,7 @@ namespace Chat.Services.LiveStreaming
 				},
 				// 5) Optionally enable live transcriptions if desired. 
 				// WARNING : This is extra cost ($$$), so please check pricing before enabling.
-				transcriptions:new List<LiveEventTranscription>(){
+				transcriptions:new List<LiveEventTranscription>() {
 					new LiveEventTranscription(
 						// The value should be in BCP-47 format (e.g: 'en-US'). See https://go.microsoft.com/fwlink/?linkid=2133742
 						language: "en-us",
