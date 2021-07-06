@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/preval.macro": "^3.0.0",
     "@types/react-aria-live": "^2.0.0",
+    "axios": "^0.21.1",
     "preval.macro": "^5.0.0",
     "react": "^16.14.0",
     "react-aria-live": "^2.0.5",
