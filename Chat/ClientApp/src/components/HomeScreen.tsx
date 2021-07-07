@@ -18,6 +18,7 @@ import {
 export interface HomeScreenProps {
   createThreadHandler(): void;
   logInPageHandler(): void;
+  getEventInfo(): void;
 }
 
 const imageStyleProps: IImageStyles = {
@@ -75,7 +76,8 @@ export default (props: HomeScreenProps): JSX.Element => {
               role="main"
               aria-label="Log in as organizer"
               className={buttonStyle}
-              onClick={() => {
+              onClick={async () => {
+                await props.getEventInfo();
                 props.logInPageHandler();
               }}
             >

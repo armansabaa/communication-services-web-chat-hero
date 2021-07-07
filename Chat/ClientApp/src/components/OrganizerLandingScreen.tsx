@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Checkbox, IStackTokens, PrimaryButton, Stack, TextField } from '@fluentui/react';
-import { containerTokens, eventHeaderTokens, headerStyle, upperStackStyle, upperStackTokens } from './styles/HomeScreen.styles';
+import { Checkbox, CompoundButton, DefaultButton, IStackTokens, PrimaryButton, Stack, TextField } from '@fluentui/react';
+import { containerTokens, descriptionStyle, eventHeaderTokens, headerStyle, upperStackStyle, upperStackTokens } from './styles/HomeScreen.styles';
+import { tilesStackStyles, tilesStackTokens, tileStyle } from './styles/RoomTile.styles';
+import { AcsRoom } from '../core/actions/EventAction';
 
 export interface OrganizerLandingScreenProps {
   backToHomeHandler(): void;
   createRoom(roomTitle: string, enableChat: boolean, enableCalling: boolean): void;
-  getEventInfo(): void;
+  getRooms(): Record<string, AcsRoom>;
+  rooms: Record<string, AcsRoom>;
 }
 
 const outerStackTokens: IStackTokens = {
@@ -26,22 +29,18 @@ export default (props: OrganizerLandingScreenProps): JSX.Element => {
   };
 
   const onEnableChatChange = (event: any) => {
-    if (event.target.value && event.target.value == 'on') {
-      setEnableChat(true);
-    } else {
-      setEnableChat(false);
+    if (event.target.value) {
+      setEnableChat(event.target.checked);
     }
   };
 
   const onEnableCallChange = (event: any) => {
-    if (event.target.value && event.target.value == 'on') {
-      setEnableCall(true);
-    } else {
-      setEnableCall(false);
-
+    if (event.target.value) {
+      setEnableCall(event.target.checked);
     }
   };
 
+  const rooms = props.rooms;
   return (
     <div>
       <Stack horizontalAlign="center" verticalAlign="center" tokens={containerTokens}>
@@ -59,7 +58,6 @@ export default (props: OrganizerLandingScreenProps): JSX.Element => {
           <Checkbox label="Enable Calling" onChange={onEnableCallChange}/>
           <PrimaryButton
             onClick={async (e) => {
-              await props.getEventInfo();
               await props.createRoom(title, enableChat, enableCall);
             }}
             text="Create Room" />
@@ -69,6 +67,19 @@ export default (props: OrganizerLandingScreenProps): JSX.Element => {
             }}
             text="Back to Home Page" />
         </Stack>
+      </Stack>
+
+      <Stack horizontal horizontalAlign="space-evenly" styles={tilesStackStyles} tokens={tilesStackTokens}>
+        {
+          Object.entries(rooms).map((value) => {
+            return <CompoundButton className={tileStyle} >
+              <div> {value[1].title} <br />
+                <div className={descriptionStyle}> Chat Enabled: {value[1].chatSessionThreadId === null ? "false" : "true"} <br />Call Enabled: {value[1].callingSessionId === null ? "false" : "true"}
+                </div>
+              </div>
+            </CompoundButton>
+          })
+        }
       </Stack>
       </div>
 

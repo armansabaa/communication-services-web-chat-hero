@@ -11,7 +11,6 @@ import {
   rightInputContainerStyle,
   startChatButtonTextStyle
 } from './styles/ConfigurationScreen.styles';
-import { CAT, MOUSE, KOALA, OCTOPUS, MONKEY, FOX, getEventId } from '../utils/utils';
 import DisplayNameField from './DisplayNameField';
 import { ENTER_KEY, MAXIMUM_LENGTH_OF_NAME } from '../constants';
 import heroSVG from '../assets/hero.svg';

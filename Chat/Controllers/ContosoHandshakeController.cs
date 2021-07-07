@@ -136,6 +136,7 @@ namespace Chat
             if(roomRequest.EnableCalling)
             {
                 //TODO: we haven't implemented dynamic calling yet
+                room.CallingSessionId = "4fa24250-d478-11eb-a4fa-bb783cfd38e0";
             }
 
             //Add to the database!

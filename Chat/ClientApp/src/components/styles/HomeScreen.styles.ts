@@ -45,6 +45,12 @@ const headerStyle = mergeStyles({
   maxWidth: '23.188rem'
 });
 
+const descriptionStyle = mergeStyles({
+  fontWeight: 400,
+  fontSize: '0.875rem', // 14px
+});
+
+
 const videoCameraIconStyle = mergeStyles({
   marginRight: '0.375rem',
   fontSize: '1.375rem' // 22px
@@ -96,5 +102,6 @@ export {
   upperStackStyle,
   moreInfoStyle,
   startChatTextStyle,
-  eventHeaderTokens
+  eventHeaderTokens,
+  descriptionStyle
 };
