@@ -120,11 +120,10 @@ namespace Chat.Services.LiveStreaming
 					// In the AMP player client side JS options, set -  heuristicProfile: "Low Latency Heuristic Profile". 
 					// To use low latency optimally, you should tune your encoder settings down to 1 second GOP size instead of 2 seconds.
 					StreamOptionsFlag.LowLatency
-				}
-				//,
+				},
 				// 5) Optionally enable live transcriptions if desired. 
 				// WARNING : This is extra cost ($$$), so please check pricing before enabling.
-				/*transcriptions:new List<LiveEventTranscription>(){
+				transcriptions:new List<LiveEventTranscription>() {
 					new LiveEventTranscription(
 						// The value should be in BCP-47 format (e.g: 'en-US'). See https://go.microsoft.com/fwlink/?linkid=2133742
 						language: "en-us",
@@ -132,7 +131,7 @@ namespace Chat.Services.LiveStreaming
 							trackName: "English" // set the name you want to appear in the output manifest
 						)
 					)
-				}*/
+				}
 			);
 
 			liveEvent = await serviceClient.LiveEvents.CreateAsync(
