@@ -26,7 +26,7 @@ namespace Chat
             var eventInfo = new ACSEvent
             {
                 Id = "acs_ve_06_07_2021",
-                ChatSessionThreadId = "19:Ytl68hCH36NP5lQFE_EQain8ACl9qOiSdw2dytem4QM1@thread.v2",
+                ChatSessionThreadId = "19:NiPwoXBkYJxAbDcJ6t3G8uBGUeSxIvOGCO8DNcOD4LA1@thread.v2",
                 Rooms = new Dictionary<string, ACSRoom>()
                 {
                     { 
@@ -35,7 +35,7 @@ namespace Chat
                         {
                             Id = "room1",
                             Title = "Global All Hands",
-                            ChatSessionThreadId = "19:gD9iUbus0ZWQjGJ-oATDlX4cu8wH6FeJE7uPe2LFLUQ1@thread.v2",
+                            ChatSessionThreadId = "19:9XXzSF-RWvk7abVPgf61wHPCw4cc9ZtMsa7EtfKwJ9I1@thread.v2",
                             CallingSessionId = "4fa24250-d478-11eb-a4fa-bb783cfd38e0"
                         }
                     },
