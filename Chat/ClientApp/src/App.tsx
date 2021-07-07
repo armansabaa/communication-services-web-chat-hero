@@ -27,7 +27,6 @@ export default (): JSX.Element => {
   const [page, setPage] = useState('home');
 
   const getComponent = () => {
-
     if (getEventId() && page === 'home') {
       setPage('chatConfiguration');
     }

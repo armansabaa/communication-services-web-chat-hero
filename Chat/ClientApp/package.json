@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@azure/communication-calling": "1.0.0",
     "@azure/communication-chat": "1.0.0",
     "@azure/communication-common": "1.0.0",
-    "@azure/communication-calling": "1.0.0",
     "@azure/communication-identity": "1.0.0",
     "@azure/communication-signaling": "1.0.0-beta.3",
     "@fluentui/react": "^7.166.2",
@@ -17,6 +17,7 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/preval.macro": "^3.0.0",
     "@types/react-aria-live": "^2.0.0",
+    "axios": "^0.21.1",
     "preval.macro": "^5.0.0",
     "react": "^16.14.0",
     "react-aria-live": "^2.0.5",
