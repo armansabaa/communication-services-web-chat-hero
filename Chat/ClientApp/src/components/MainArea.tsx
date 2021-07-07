@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { DefaultButton, Image, Stack } from '@fluentui/react';
+import React from 'react';
+import { DefaultButton, Image, Stack} from '@fluentui/react';
 import defaultImg from '../assets/default.png';
 import { staticImageStyle, staticAreaStyle } from './styles/ChatScreen.styles';
 import { tilesStackStyles, tilesStackTokens, tileStyle } from './styles/RoomTile.styles';
@@ -21,26 +21,26 @@ export default (props: MainScreenProps): JSX.Element => {
 
   const getComponent = () => {
     if (contents === 'welcome') {
-        const rooms = getRooms();
-        return (
-          <div className={staticAreaStyle}>
+      const rooms = getRooms();
+      return (
+        <div className={staticAreaStyle}>
           <Image
             className={staticImageStyle}
             alt="Default Event Image"
             {...imageProps}
           />
           <h2>Event Description</h2>
-          Welcome to Contoso Fest 2021! Check out the latest announcements at our gloabl all-hands, see our cutting edge Contoso tech in demo sessions, or Ask Anything of our fearless leadership team.
+            Welcome to Contoso Fest 2021! Check out the latest announcements at our global all-hands, see our cutting edge Contoso tech in demo sessions, or Ask Anything of our fearless leadership team.
           <h2>Upcoming Sessions</h2>
-            <Stack horizontal horizontalAlign="space-evenly" styles={tilesStackStyles} tokens={tilesStackTokens}>
-              {
-                Object.entries(rooms).map((value) => {
-                  return <DefaultButton className={tileStyle} text={value[1].title} onClick={() => { setMainArea({ contentType: "room", roomTitle: value[1].title }); setActiveRoom(value[1].id); props.resetMessages(); }} />
-                })
-              }
+          <Stack horizontal horizontalAlign="space-evenly" styles={tilesStackStyles} tokens={tilesStackTokens}>
+            {
+              Object.entries(rooms).map((value) => {
+                return <DefaultButton className={tileStyle} text={value[1].title} onClick={() => { setMainArea({ contentType: "room", roomTitle: value[1].title }); setActiveRoom(value[1].id); props.resetMessages(); }} />
+              })
+            }
           </Stack>
         </div>
-        );
+      );
     } else if (contents === 'room') {
       return (
         <div className={staticAreaStyle}>

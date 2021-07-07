@@ -14,6 +14,13 @@ namespace Chat
         public Dictionary<string, ACSRoom> Rooms { get; set; }
     }
 
+    public class ACSRoomRequestModel
+    {
+        public string Title { get; set; }
+        public bool EnableChat { get; set; }
+        public bool EnableCalling { get; set; }
+    }
+
     public class ACSRoom
     {
         public string Id { get; set; }
