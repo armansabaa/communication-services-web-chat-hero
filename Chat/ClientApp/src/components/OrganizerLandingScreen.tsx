@@ -8,8 +8,7 @@ import { useBoolean } from '@fluentui/react-hooks';
 export interface OrganizerLandingScreenProps {
   backToHomeHandler(): void;
   createRoom(roomTitle: string, enableChat: boolean, enableCalling: boolean): void;
-  getRooms(): Record<string, AcsRoom>;
-  rooms: Record<string, AcsRoom>;
+  rooms: Record<string, AcsRoom> | undefined;
 }
 
 const outerStackTokens: IStackTokens = {
@@ -101,6 +100,7 @@ export default (props: OrganizerLandingScreenProps): JSX.Element => {
 
       <Stack horizontal horizontalAlign="space-evenly" styles={tilesStackStyles} tokens={tilesStackTokens}>
         {
+          rooms? 
           Object.entries(rooms).map((value) => {
             return <CompoundButton className={tileStyle} >
               <div> {value[1].title} <br />
@@ -108,7 +108,7 @@ export default (props: OrganizerLandingScreenProps): JSX.Element => {
                 </div>
               </div>
             </CompoundButton>
-          })
+          }) : null
         }
       </Stack>
       </div>
